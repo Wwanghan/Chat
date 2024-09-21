@@ -147,3 +147,5 @@ public class addFriendUi extends AppCompatActivity {
         friendLayout.addView(friendUid);
     }
 }
+
+// test
