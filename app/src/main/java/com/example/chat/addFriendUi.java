@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -123,27 +124,26 @@ public class addFriendUi extends AppCompatActivity {
 
         // 创建第一个 TextView (用于显示名字)
         TextView friendName = new TextView(this);
-        LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        nameParams.setMargins(10, 30, 0, 0); // 左边距 10dp, 上边距 30dp
+        LinearLayout.LayoutParams nameParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
+        nameParams.setMargins(30, -20, 0, 0); // 左边距 10dp, 上边距 30dp
         friendName.setLayoutParams(nameParams);
         friendName.setText(name);
 
-        // 创建第二个 TextView (用于显示UID)
-        TextView friendUid = new TextView(this);
-        LinearLayout.LayoutParams uidParams = new LinearLayout.LayoutParams(
+        // 添加按钮
+        Button addFriend_btn = new Button(this);
+        LinearLayout.LayoutParams addFriend_btn_params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        uidParams.setMargins(-100, 90, 0, 0); // 左边距 -70dp, 上边距 60dp
-        friendUid.setLayoutParams(uidParams);
-        friendUid.setText(Integer.toString(Uid));
+        addFriend_btn_params.setMargins(0 , 20 , 20 , 0);
+        addFriend_btn.setLayoutParams(addFriend_btn_params);
+
+        addFriend_btn.setText("添加好友");
+
 
         // 将创建的控件添加到 LinearLayout 中
         friendLayout.addView(avatar);
         friendLayout.addView(friendName);
-        friendLayout.addView(friendUid);
+        friendLayout.addView(addFriend_btn);
     }
 }
