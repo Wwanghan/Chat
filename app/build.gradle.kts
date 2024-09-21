@@ -19,6 +19,8 @@ android {
         versionName = "1.0"
         // 获取数据库密钥
         buildConfigField("String", "API_KEY", "\"${project.findProperty("SQL_API_KEY") as String}\"")
+        buildConfigField("String", "QIANFAN_AK", "\"${project.findProperty("QIANFAN_AK") as String}\"")
+        buildConfigField("String", "QIANFAN_SK", "\"${project.findProperty("QIANFAN_SK") as String}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

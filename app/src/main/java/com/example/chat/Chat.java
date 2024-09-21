@@ -33,6 +33,8 @@ public class Chat extends AppCompatActivity {
     private  Qianfan qianfan;      // 声明千帆大模型
     private Button sendButton;
     private TextView showObject ;
+
+
     private String FN;
     // Handler 用于接受子线程传递过来的参数，
     private Handler M_Handler = new Handler(Looper.myLooper()){
@@ -59,7 +61,7 @@ public class Chat extends AppCompatActivity {
         // Friend Name ，用于表示好友名字的变量
         FN = getIntent().getStringExtra("friend_name");
 
-        qianfan = new Qianfan(Auth.TYPE_OAUTH , "5B0KyLICmzUL9agq7cg7mguR", "sqq17nJwzfalPhnExjbQ7FTwjVzPIibz");
+        qianfan = new Qianfan(Auth.TYPE_OAUTH , BuildConfig.QIANFAN_AK, BuildConfig.QIANFAN_SK);
         chatLayout = findViewById(R.id.chatLayout);
         scrollView = findViewById(R.id.scrollView);
         messageInput = findViewById(R.id.messageInput);
