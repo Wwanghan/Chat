@@ -205,3 +205,5 @@ public class Chat extends AppCompatActivity {
         scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
     }
 }
+
+// 这是一个测试

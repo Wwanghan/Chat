@@ -6,13 +6,19 @@ android {
     namespace = "com.example.chat"
     compileSdk = 33
 
+    // 启用 buildConfig 功能
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.chat"
         minSdk = 33
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
+        // 获取数据库密钥
+        buildConfigField("String", "API_KEY", "\"${project.findProperty("SQL_API_KEY") as String}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
