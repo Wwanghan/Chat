@@ -23,7 +23,8 @@ public class get_mysql_data {
             String url = "http://49.233.248.218:9999/MnNnZCxCxycdpcYget_data?query=" + URLEncoder.encode(query_command, "utf-8") + "&database=" + database;
             URL requestUrl = new URL(url);
             HttpURLConnection HttpURLConnection = (java.net.HttpURLConnection) requestUrl.openConnection();
-            HttpURLConnection.setRequestProperty("x-api-key" , "pRSi0f$ie9({Ap^-");
+            HttpURLConnection.setRequestProperty("x-api-key" , BuildConfig.API_KEY);
+            Log.i("toad", "querySqlData: " + BuildConfig.API_KEY);
             HttpURLConnection.setRequestMethod("GET");
             HttpURLConnection.setConnectTimeout(5000);
             HttpURLConnection.connect();
