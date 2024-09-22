@@ -1,6 +1,7 @@
 package com.example.chat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,7 +44,37 @@ myFragment extends Fragment {
         TextView uid = view.findViewById(R.id.UID);
         uid.setText(info_content);
 
+        Button wlan_connect_btn = view.findViewById(R.id.WLAN_CONNECT_BTN);
+        wlan_connect_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText input = new EditText(getActivity());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
 
+                // 创建 AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("请输入连接的内网IP");
+                builder.setView(input);
+
+                // 设置“确认”按钮
+                builder.setPositiveButton("确认", (dialog, which) -> {
+                    String userInput = input.getText().toString();
+                    // 处理用户输入的文本
+
+                    Toast.makeText(getActivity() , userInput , Toast.LENGTH_SHORT).show();
+                });
+
+                // 设置“取消”按钮
+                builder.setNegativeButton("取消", (dialog, which) -> dialog.cancel());
+
+                // 显示对话框
+                builder.show();
+            }
+        });
+        
     }
 
     @Override
