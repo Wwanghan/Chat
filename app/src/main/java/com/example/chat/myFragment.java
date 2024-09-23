@@ -75,7 +75,7 @@ myFragment extends Fragment {
                     try {
                         // 连接到服务器
                         Socket socket = new Socket(serverAddress, serverPort);
-                        System.out.println("已连接到服务器: " + serverAddress + ":" + serverPort);
+                        Toast.makeText(getActivity() , "已连接到服务器 : " + serverAddress + ":" + serverPort , Toast.LENGTH_SHORT).show();
 
                         // 用于读取服务器的响应
                         BufferedReader s_input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -113,7 +113,6 @@ myFragment extends Fragment {
                         s_input.close();
                         output.close();
                         socket.close();
-                        System.out.println("客户端已断开连接");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
