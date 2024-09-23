@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import com.example.chat.R.id;
 
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         chatFragment = new chatFragment();
         myFragment = new myFragment();
+
+        RadioButton chatNav = findViewById(R.id.chat_nav);
+        chatNav.setChecked(true);
 
         // 默认显示聊天 Fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, chatFragment).commit();
