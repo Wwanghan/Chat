@@ -24,6 +24,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
 public class
 myFragment extends Fragment {
 
@@ -61,10 +67,57 @@ myFragment extends Fragment {
 
                 // 设置“确认”按钮
                 builder.setPositiveButton("确认", (dialog, which) -> {
-                    String userInput = input.getText().toString();
+                    String connect_ip = input.getText().toString();
                     // 处理用户输入的文本
+                    String serverAddress = connect_ip; // 服务端地址
+                    int serverPort = 9231; // 服务端端口
 
-                    Toast.makeText(getActivity() , userInput , Toast.LENGTH_SHORT).show();
+                    try {
+                        // 连接到服务器
+                        Socket socket = new Socket(serverAddress, serverPort);
+                        System.out.println("已连接到服务器: " + serverAddress + ":" + serverPort);
+
+                        // 用于读取服务器的响应
+                        BufferedReader s_input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        // 用于向服务器发送消息
+                        PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+
+                        // 用户输入
+                        Scanner scanner = new Scanner(System.in);
+                        String messageToSend;
+
+                        // 从这开始是测试发送一条数据，伪代码，先测试用
+                        messageToSend = "this is a test message";
+                        output.println(messageToSend);
+                        // 持续发送和接收消息，暂时不用
+//                        while (true) {
+//                            System.out.print("请输入发送给服务端的消息 (输入 'exit' 断开连接): ");
+//                            messageToSend = scanner.nextLine();
+//
+//                            // 发送消息到服务端
+//                            output.println(messageToSend);
+//
+//                            // 检查是否是退出命令
+//                            if ("exit".equalsIgnoreCase(messageToSend.trim())) {
+//                                System.out.println("正在断开连接...");
+//                                break; // 退出循环并断开连接
+//                            }
+//
+//                            // 读取服务端的响应
+//                            String responseFromServer = s_input.readLine();
+//                            System.out.println("服务端响应: " + responseFromServer);
+//                        }
+
+                        // 关闭资源
+                        scanner.close();
+                        s_input.close();
+                        output.close();
+                        socket.close();
+                        System.out.println("客户端已断开连接");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 });
 
                 // 设置“取消”按钮
@@ -74,7 +127,7 @@ myFragment extends Fragment {
                 builder.show();
             }
         });
-        
+
     }
 
     @Override
