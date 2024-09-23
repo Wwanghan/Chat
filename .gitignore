@@ -15,4 +15,9 @@
 .cxx
 gradle/
 local.properties
+<<<<<<< HEAD
 gradle.properties
+=======
+app/release/
+.idea/deploymentTargetDropDown.xml
+>>>>>>> 1ee734543f8d193d1e6d9e075ffe30c2b327e10c
