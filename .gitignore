@@ -14,4 +14,12 @@
 .cxx
 gradle/
 local.properties
+<<<<<<< HEAD
 gradle.properties
+=======
+app/release/
+.idea/deploymentTargetDropDown.xml
+.idea/.name
+.idea/deploymentTargetSelector.xml
+.idea/migrations.xml
+modified:   .idea/gradle.xml

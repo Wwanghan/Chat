@@ -25,14 +25,14 @@ public class chatFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ImageButton introduceBtn = view.findViewById(R.id.add_friend_ui);
-        introduceBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent to_introduce = new Intent(getActivity() , addFriendUi.class);
-                startActivity(to_introduce);
-            }
-        });
+//        ImageButton introduceBtn = view.findViewById(R.id.add_friend_ui);
+//        introduceBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent to_introduce = new Intent(getActivity() , addFriendUi.class);
+//                startActivity(to_introduce);
+//            }
+//        });
 
         LinearLayout friend1 = view.findViewById(R.id.friend1);
         LinearLayout friend2 = view.findViewById(R.id.friend2);

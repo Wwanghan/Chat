@@ -6,19 +6,20 @@
     android:orientation="vertical"
     android:padding="30dp">
 
-    <ImageButton
-        android:id="@+id/add_friend_ui"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="fitXY"
-        android:background="@color/white"
-        android:src="@drawable/add_friend"/>
+<!--    暂时不做大的通信，先从小的内网通信做起-->
+<!--    <ImageButton-->
+<!--        android:id="@+id/add_friend_ui"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:background="@color/white"-->
+<!--        android:src="@drawable/add_friend"/>-->
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:text="添加好友"/>
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginLeft="0dp"-->
+<!--        android:text="添加好友"/>-->
 
     <TextView
         android:layout_width="wrap_content"

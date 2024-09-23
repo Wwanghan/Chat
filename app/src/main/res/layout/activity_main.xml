@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:button="@null"
             style="@style/fragment"
-            android:drawableTop="@drawable/chat"
+            android:drawableTop="@drawable/bottom_switch_chat"
             android:text="聊天"
             android:textSize="13dp"
             />
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:button="@null"
             style="@style/fragment"
-            android:drawableTop="@drawable/my"
+            android:drawableTop="@drawable/bottom_switch_my"
             android:textSize="13dp"
             android:text="我的"
             />
