@@ -2,6 +2,7 @@ package com.example.chat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,29 +78,18 @@ myFragment extends Fragment {
                         try {
                             // 连接到服务器
                             Socket socket = new Socket(serverAddress, serverPort);
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show()
-                            );
+                            ((mySocket) getActivity().getApplication()).setSocket(socket);
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
 
-                            // 用于读取服务器的响应
-                            BufferedReader s_input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                            // 用于向服务器发送消息
-                            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+                                // 连接成功后跳转到新页面
+                                Intent intent = new Intent(getActivity(), Chat.class); // 替换为你的新页面类名
+                                startActivity(intent);
+                                getActivity().finish(); // 可选，关闭当前页面
+                            });
 
-                            // 测试发送一条数据
-                            String messageToSend = "this is a test message";
-                            output.println(messageToSend);
-
-                            // 读取服务端的响应
-                            String responseFromServer = s_input.readLine();
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getActivity(), "服务端响应: " + responseFromServer, Toast.LENGTH_SHORT).show()
-                            );
-
-                            // 关闭资源
-                            s_input.close();
-                            output.close();
-                            socket.close();
+                            // 关闭 socket 连接
+                            socket.close(); // 连接成功后可以关闭 socket
                         } catch (Exception e) {
                             e.printStackTrace();
                             getActivity().runOnUiThread(() ->
@@ -159,4 +149,6 @@ myFragment extends Fragment {
             info_content = fs.readFromFile("chat_personalInformation.txt" , getActivity());
         }
     }
+
+
 }
