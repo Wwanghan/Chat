@@ -2,6 +2,7 @@ package com.example.chat;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,7 +53,6 @@ myFragment extends Fragment {
 
         Button wlan_connect_btn = view.findViewById(R.id.WLAN_CONNECT_BTN);
 
-
         wlan_connect_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +78,7 @@ myFragment extends Fragment {
                         try {
                             // 连接到服务器
                             Socket socket = new Socket(serverAddress, serverPort);
+
                             getActivity().runOnUiThread(() ->
                                     Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show()
                             );
@@ -101,6 +102,20 @@ myFragment extends Fragment {
                             s_input.close();
                             output.close();
                             socket.close();
+
+                            ((mySocket) getActivity().getApplication()).setSocket(socket);
+                            getActivity().runOnUiThread(() -> {
+                                Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
+
+                                // 连接成功后跳转到新页面
+                                Intent intent = new Intent(getActivity(), Chat.class); // 替换为你的新页面类名
+                                startActivity(intent);
+                                getActivity().finish(); // 可选，关闭当前页面
+                            });
+
+                            // 关闭 socket 连接
+//                            socket.close(); // 连接成功后可以关闭 socket
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             getActivity().runOnUiThread(() ->
@@ -160,4 +175,6 @@ myFragment extends Fragment {
             info_content = fs.readFromFile("chat_personalInformation.txt" , getActivity());
         }
     }
+
+
 }
