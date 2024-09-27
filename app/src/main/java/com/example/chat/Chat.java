@@ -29,6 +29,7 @@ import com.baidubce.qianfan.model.chat.ChatResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -59,7 +60,6 @@ public class Chat extends AppCompatActivity {
                     String aiRespContent = (String) msg.obj;
                     addMessage(aiRespContent , FN);
                     scrollToBottom();
-
                 }
         }
     };
@@ -75,23 +75,28 @@ public class Chat extends AppCompatActivity {
         // 这里判断FN是否为NULL,如果不为NULL,则表明是从聊天页面进入的，那么FN是可以获取到一个值的，同时也不需要获取socket
         // 只有通过内网连接，双方连接成功后，才会有socket，如果将获取socket的代码写在if的外面，那么获取不到socket则会闪退
         // 如果是从内网连接方式双方连接成功后跳转到的聊天页面的话，那么FN是没有值的，为Null，if成立，进入if获取socket,开始聊天
-        if (FN == null){
+        if (FN == null) {
             FN = "tmp_connect";
             socket = ((mySocket) getApplication()).getSocket();
-            try {
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                output = new PrintWriter(socket.getOutputStream(), true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (socket != null && socket.isConnected()) {
+                try {
+                    input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+                    output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("toad", "Socket 输入输出流初始化失败: " + e.getMessage());
+                }
 
-            // 开启一个线程监听消息接收
-            try {
-                new Thread(() -> receiveMessages()).start();
-                Log.i("toad", "消息监听线程已启动");
-            } catch (Exception e){
-                Log.i("toad", "onCreate: " + e.getMessage());
-                e.printStackTrace();
+                // 开启一个线程监听消息接收
+                try {
+                    new Thread(() -> receiveMessages()).start();
+                    Log.i("toad", "消息监听线程已启动");
+                } catch (Exception e) {
+                    Log.i("toad", "onCreate: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                Log.i("toad", "Socket 连接失败");
             }
         }
 
@@ -152,7 +157,7 @@ public class Chat extends AppCompatActivity {
                                 public void run() {
                                     // 调用我自己封装好的函数，函数封装了请求大模型的功能，只需要传递给它一个字符串，也就是你跟他聊天你的内容。
                                     // 这个内容上面已经保存在了message这个变量当中
-                                    String aiResp= GetQianFanResponse(message);
+                                    String aiResp = GetQianFanResponse(message);
 
                                     // 声明一个消息对象，用来存储大模型返回回来的消息结果，再给它设置一个唯一的数字表示0，方便主线程接收
                                     Message respMessage = new Message();
@@ -166,18 +171,36 @@ public class Chat extends AppCompatActivity {
 
                         // 如果是通过内网连接成功的双方，FN标志会是tmp_connect,会进入这个if
                         } else if (FN.equals("tmp_connect")) {
-                            messageInput.setText("");
-                            // 将信息发送给对方
-                            output.println(message);
+                            // 开启子线程，将信息发送给对方
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        output.println(message);
+                                        output.flush();
+                                    } catch (Throwable t) {
+                                        Log.i("toad", "Error: " + t.getMessage());
+                                        t.printStackTrace();
+                                    } finally {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // 等信息发送完毕后，再滑动滚轮
+                                                scrollToBottom();
+                                            }
+                                        });
+                                    }
+                                }
+                            }).start();
                         }
-                        scrollToBottom();
                     }else {
                         // 如果输入框为空，会执行下方代码，输出提醒用户输入框为空
                         Toast.makeText(Chat.this , "输入框不能为空" , Toast.LENGTH_SHORT).show();
                     }
+
                 } catch (Exception e){
                     e.printStackTrace();
-                    Log.i("toad", "onClick: " + e.getMessage());
+                    Log.i("toad", "Error: " + e.getMessage());
                 }
             }
         });
@@ -191,6 +214,7 @@ public class Chat extends AppCompatActivity {
                 Log.i("toad", "接收到消息: " + message);
                 String finalMessage = message;
                 runOnUiThread(() -> addMessage(finalMessage, FN)); // 更新UI，显示消息
+                scrollToBottom();
             }
         } catch (IOException e) {
             e.printStackTrace();

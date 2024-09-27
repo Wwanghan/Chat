@@ -76,7 +76,7 @@ myFragment extends Fragment {
                     // 启动新的线程进行网络连接
                     new Thread(() -> {
                         try {
-                            // 连接到服务器
+                            // 连接到服务器i
                             Socket socket = new Socket(serverAddress, serverPort);
                             ((mySocket) getActivity().getApplication()).setSocket(socket);
                             getActivity().runOnUiThread(() -> {
@@ -88,8 +88,6 @@ myFragment extends Fragment {
                                 getActivity().finish(); // 可选，关闭当前页面
                             });
 
-                            // 关闭 socket 连接
-                            socket.close(); // 连接成功后可以关闭 socket
                         } catch (Exception e) {
                             e.printStackTrace();
                             getActivity().runOnUiThread(() ->
