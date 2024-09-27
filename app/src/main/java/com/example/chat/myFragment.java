@@ -78,31 +78,6 @@ myFragment extends Fragment {
                         try {
                             // 连接到服务器i
                             Socket socket = new Socket(serverAddress, serverPort);
-
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show()
-                            );
-
-                            // 用于读取服务器的响应
-                            BufferedReader s_input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                            // 用于向服务器发送消息
-                            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-
-                            // 测试发送一条数据
-                            String messageToSend = "this is a test message";
-                            output.println(messageToSend);
-
-                            // 读取服务端的响应
-                            String responseFromServer = s_input.readLine();
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getActivity(), "服务端响应: " + responseFromServer, Toast.LENGTH_SHORT).show()
-                            );
-
-                            // 关闭资源
-                            s_input.close();
-                            output.close();
-                            socket.close();
-
                             ((mySocket) getActivity().getApplication()).setSocket(socket);
                             getActivity().runOnUiThread(() -> {
                                 Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
@@ -137,7 +112,7 @@ myFragment extends Fragment {
         super.onCreate(savedInstanceState);
 //        动态请求读写权限
         if (ContextCompat.checkSelfPermission(getActivity() , Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(getActivity() , Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                ContextCompat.checkSelfPermission(getActivity() , Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.WRITE_EXTERNAL_STORAGE} , 1);
         }else {
             getUserUid();
@@ -175,3 +150,4 @@ myFragment extends Fragment {
 
 
 }
+
