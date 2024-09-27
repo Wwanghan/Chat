@@ -54,6 +54,7 @@ public class Chat extends AppCompatActivity {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
 
+
             // 这里传递过来了一个标识数字0，表示询问千帆大模型问题后返回成果数据了
             if (msg.what == 0){
                 showObject.setText(FN);
@@ -61,6 +62,15 @@ public class Chat extends AppCompatActivity {
                 addMessage(aiRespContent , FN);
                 scrollToBottom();
             }
+
+                // 这里传递过来了一个标识数字0，表示询问千帆大模型问题后返回成果数据了
+                if (msg.what == 0){
+                    showObject.setText(FN);
+                    String aiRespContent = (String) msg.obj;
+                    addMessage(aiRespContent , FN);
+                    scrollToBottom();
+                }
+
         }
     };
 
