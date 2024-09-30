@@ -23,27 +23,54 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             android:layout_marginLeft="10dp"
-            android:textColor="#185519"
+            android:textColor="#000000"
             android:text="Name: Mr.toad"/>
 
         <TextView
             android:id="@+id/UID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="105dp"
+            android:layout_marginTop="91dp"
             android:layout_marginLeft="-93dp"
-            android:textColor="#FCDE70"/>
+            android:textColor="#000000"
+            android:text="ID:000001"/>
+        <!--    UID后期为随机-->
     </LinearLayout>
 
     <Button
         android:id="@+id/WLAN_CONNECT_BTN"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="内网连接"
+        android:text="连接好友"
         android:gravity="left"
         style="@style/CustomButton"
+        android:background="@drawable/button_mypage"
+        android:textColor="@color/black"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="20dp">
+    </View>
+
+    <Button
+        android:id="@+id/Sttings"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/Sttings"
+        android:gravity="left"
+        style="@style/CustomButton"
+        android:background="@drawable/button_mypage"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/aboutUser"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/AboutUser"
+        style="@style/CustomButton"
+        android:gravity="left"
         android:background="@drawable/button_mypage"
         android:textColor="@color/black"/>
 

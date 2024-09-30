@@ -39,6 +39,7 @@ myFragment extends Fragment {
     String info_content;  // 用于存放读取的文件信息
     private View view;
     private TextView chat;
+
     @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my, container, false);
