@@ -6,6 +6,24 @@
     android:background="@color/background_grey"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/showObject"
+            android:paddingLeft="15dp"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="24sp"
+            android:background="@drawable/friend_chat_interface"
+            android:gravity="center_horizontal"
+            />
+
+    </RelativeLayout>
+
     <!-- ScrollView 包含聊天内容 -->
     <ScrollView
         android:id="@+id/scrollView"
@@ -36,21 +54,23 @@
         <EditText
             android:id="@+id/messageInput"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40sp"
             android:layout_weight="1"
-            android:hint="输入信息"/>
+            android:hint="输入信息"
+            android:textColorHint="#272525"
+            android:inputType="text"
+            android:paddingLeft="12sp"
+            android:background="@drawable/left_input_field_rounded_corner_border"
+            />
 
         <Button
             android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发送"/>
+            android:layout_width="80sp"
+            android:layout_height="40sp"
+            android:text="发送"
+            android:textColor="@color/black"
+            android:background="@drawable/right_input_field_rounded_corner_border"
+            />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/showObject"
-        android:paddingLeft="15dp"
-        android:textColor="@color/object_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

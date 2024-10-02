@@ -40,6 +40,10 @@
 
         </activity>
 
+        <activity
+            android:name=".HomeToolbar"
+            android:theme="@style/MyDialogStyleTop"/>
+
     </application>
 
 </manifest>

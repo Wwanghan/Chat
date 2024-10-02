@@ -1,60 +1,33 @@
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.chat;
 
-public class home_toolbar extends AppCompatActivity {
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+public class HomeToolbar extends Activity {
+
+    private LinearLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // 设置Toolbar等其他初始化代码...  
+        setContentView(R.layout.main_top_right_dialog);
+        //设置对话框activity的宽度等于屏幕宽度，一定要设置，不然对话框会显示不全
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);//需要添加的语句
+        layout=(LinearLayout)findViewById(R.id.main_dialog_layout);
+        layout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     }
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // 加载菜单资源文件到menu中  
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-        return true; // 表示菜单创建成功  
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // 处理菜单项点击事件  
-        switch (item.getItemId()) {
-            case R.id.backup:
-                showToast("You clicked backup");
-                break;
-            case R.id.settings:
-                showToast("You clicked settings");
-                break;
-            case R.id.delete:
-                showToast("You clicked delete");
-                break;
-            case R.id.choose_1:
-                showToast("You clicked choose_1");
-                break;
-            case R.id.choose_2:
-                showToast("You clicked choose_2");
-                break;
-            case R.id.other1:
-                showToast("You clicked other_1");
-                break;
-            case R.id.other2:
-                showToast("You clicked other_2");
-                break;
-            default:
-                // 处理未知菜单项或不做处理  
-                return super.onOptionsItemSelected(item);
-        }
-        return true; // 表示事件已处理  
-    }
-
-    // 辅助方法，用于显示Toast消息  
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    public boolean onTouchEvent(MotionEvent event){
+        finish();
+        return true;
     }
 }

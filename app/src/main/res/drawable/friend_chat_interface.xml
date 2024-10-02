@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-</selector>
+<!-- 主页上方的圆角边框 -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 填充颜色 -->
+    <solid android:color="#80ECECEC" />
+
+    <!-- 边框颜色与宽度 -->
+    <stroke
+        android:color="#000000"
+        android:width="1dp" />
+
+    <!-- 圆角大小 -->
+    <corners
+        android:topRightRadius="0sp"
+        android:bottomRightRadius="15sp"
+        android:topLeftRadius="0sp"
+        android:bottomLeftRadius="15sp"
+        />
+
+</shape>
+
+<!--
+右上角圆角半径
+右下角圆角半径
+
+android:topRightRadius="0sp"
+android:bottomRightRadius="0sp"
+
+左上角圆角半径
+左下角圆角半径
+
+android:topLeftRadius="0sp"
+android:bottomLeftRadius="0sp"
+-->

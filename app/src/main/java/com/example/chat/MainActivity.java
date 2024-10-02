@@ -6,12 +6,17 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
 import com.example.chat.R.id;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import android.os.Bundle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         // 默认显示聊天 Fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, chatFragment).commit();
 
+        //顶部页面状态栏的文字颜色变动(修改颜色为黑色)
+        getWindow().getDecorView().setSystemUiVisibility(ScrollView.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         RadioGroup rgGroup = findViewById(R.id.rg_group);
 
         rgGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         // 启动 TCP 服务器
         new Thread(new Runnable() {
             @Override
@@ -65,7 +74,9 @@ public class MainActivity extends AppCompatActivity {
                 startTcpServer();
             }
         }).start(); // 在后台线程中启动服务器
+
     }
+
 
     public void startTcpServer() {
         try {
@@ -103,4 +114,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //主页加号列表功能
+    public void buttonTopRight(View v){
+        Intent intent = new Intent(com.example.chat.MainActivity.this,
+                com.example.chat.HomeToolbar.class);
+        startActivity(intent);
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
