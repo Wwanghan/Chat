@@ -32,11 +32,21 @@
             android:id="@+id/UID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="91dp"
+            android:layout_marginTop="75dp"
             android:layout_marginLeft="-93dp"
             android:textColor="#000000"
-            android:text="ID:000001"/>
+            android:text="ID: 10000"/>
         <!--    UID后期为随机-->
+
+        <TextView
+            android:id="@+id/localIp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="-61dp"
+            android:textColor="#000000"
+            android:text="IP:"
+            />
     </LinearLayout>
 
     <Button
