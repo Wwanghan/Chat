@@ -7,4 +7,6 @@
     <color name="object_color">#F9B572</color>
     <color name="green">#FF00FF00</color>
     <color name="background_grey">#F5F5F5</color>
+    <color name="blue">#23A2DB</color>
+    <color name="gray">#BBC4C2</color>
 </resources>

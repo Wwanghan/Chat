@@ -29,22 +29,29 @@
     <!-- 输入区域 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:orientation="horizontal"
         android:padding="8dp">
 
         <EditText
             android:id="@+id/messageInput"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="33dp"
+            android:paddingStart="10dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/input_style"
             android:layout_weight="1"
-            android:hint="输入信息"/>
+            android:hint="请输入信息"/>
 
         <Button
             android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发送"/>
+            style="@style/CustomButton"
+            android:layout_width="74dp"
+            android:layout_height="33dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/send_button_style"
+            android:text="发送"
+            android:textSize="11dp" />
     </LinearLayout>
 
     <TextView

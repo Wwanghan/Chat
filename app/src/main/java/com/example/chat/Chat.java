@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -110,6 +112,35 @@ public class Chat extends AppCompatActivity {
 
         showObject.setText(FN);
 
+        sendButton.setEnabled(false);
+
+        sendButton.setBackgroundResource(R.drawable.send_button_unenabled);
+        messageInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // 如果我想知道用户删除或替换了哪些字符，或需要在文本发生前做某些校验，在这里写。目前暂时不需要
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // 实时处理文本发生的变化，
+                Log.i("toad", "onTextChanged: " + charSequence);
+                if (charSequence.toString().trim().isEmpty()){
+                    sendButton.setEnabled(false);
+                    sendButton.setBackgroundResource(R.drawable.send_button_unenabled);
+
+                }else {
+                    sendButton.setEnabled(true);
+                    sendButton.setBackgroundResource(R.drawable.send_button_style);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // 在用户输入后做某些事情，例如检查文本的合法性，或者格式化什么的，在这里写。目前暂时不需要
+            }
+        });
+
         messageInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -193,11 +224,7 @@ public class Chat extends AppCompatActivity {
                                 }
                             }).start();
                         }
-                    }else {
-                        // 如果输入框为空，会执行下方代码，输出提醒用户输入框为空
-                        Toast.makeText(Chat.this , "输入框不能为空" , Toast.LENGTH_SHORT).show();
                     }
-
                 } catch (Exception e){
                     e.printStackTrace();
                     Log.i("toad", "Error: " + e.getMessage());
