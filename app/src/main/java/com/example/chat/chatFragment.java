@@ -37,17 +37,9 @@ public class chatFragment extends Fragment {
 //        });
 
         LinearLayout friend1 = view.findViewById(R.id.friend1);
-        LinearLayout friend2 = view.findViewById(R.id.friend2);
-        LinearLayout friend3 = view.findViewById(R.id.friend3);
-        LinearLayout friend4 = view.findViewById(R.id.friend4);
-        LinearLayout friend5 = view.findViewById(R.id.friend5);
 
         // 添加点击事件，跳转到聊天页面
         friend1.setOnClickListener(v -> openChatActivity("AI助手"));
-        friend2.setOnClickListener(v -> openChatActivity("好友2"));
-        friend3.setOnClickListener(v -> openChatActivity("好友3"));
-        friend4.setOnClickListener(v -> openChatActivity("好友4"));
-        friend5.setOnClickListener(v -> openChatActivity("好友5"));
         //暂时加二个，用做测试
     }
 

@@ -103,7 +103,7 @@ public class Chat extends AppCompatActivity {
         }
 
 
-        qianfan = new Qianfan(Auth.TYPE_OAUTH , "5B0KyLICmzUL9agq7cg7mguR", "sqq17nJwzfalPhnExjbQ7FTwjVzPIibz");
+        qianfan = new Qianfan(Auth.TYPE_OAUTH , BuildConfig.API_QIANFAN_AK, BuildConfig.API_QIANFAN_SK);
         chatLayout = findViewById(R.id.chatLayout);
         scrollView = findViewById(R.id.scrollView);
         messageInput = findViewById(R.id.messageInput);
