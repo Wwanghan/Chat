@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ScrollView;
 
@@ -43,6 +44,7 @@ public class Chat extends AppCompatActivity {
     private  Qianfan qianfan;      // 声明千帆大模型
     private Button sendButton;
     private TextView showObject ;
+    private ImageButton chatExit;
     private String FN;
 
 
@@ -71,6 +73,7 @@ public class Chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        socket = null;
         // Friend Name ，用于表示好友名字的变量
         FN = getIntent().getStringExtra("friend_name");
 
@@ -109,11 +112,14 @@ public class Chat extends AppCompatActivity {
         messageInput = findViewById(R.id.messageInput);
         sendButton = findViewById(R.id.sendButton);
         showObject = findViewById(R.id.showObject);
+        chatExit = findViewById(R.id.chatExit);
 
         showObject.setText(FN);
 
+        // 这里在用户刚进入聊天页面时，先手动将按钮设置为不可点击状态，背景设置为灰色
+        // 因为下方检测输入框内容是当用户输入了任意内容或删除了任意内容才会触发
+        // 用户刚进入聊天页面，输入框自然为空，而刚进入页面不会触发下面的检测事件，所以要先手动将按钮设置为不可点击状态，并且背景设置为灰色
         sendButton.setEnabled(false);
-
         sendButton.setBackgroundResource(R.drawable.send_button_unenabled);
         messageInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -123,8 +129,9 @@ public class Chat extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // 实时处理文本发生的变化，
-                Log.i("toad", "onTextChanged: " + charSequence);
+                // 实时处理文本发生的变化，这里检测用户输入框的内容是否为空，对应设置按钮的状态
+                // 如果输入框为空，则将按钮设置为不可点击状态，并将背景颜色设置为灰色
+                // 如果输入框不为空，则将按钮设置为正常可点击状态，并将背景颜色设置为蓝色
                 if (charSequence.toString().trim().isEmpty()){
                     sendButton.setEnabled(false);
                     sendButton.setBackgroundResource(R.drawable.send_button_unenabled);
@@ -198,7 +205,7 @@ public class Chat extends AppCompatActivity {
                                     M_Handler.sendMessage(respMessage);
                                 }
                             }).start();
-                            showObject.setText(FN + "  发送成功，请等待AI回复...");
+                            showObject.setText("发送成功，请等待AI回复...");
 
                             // 如果是通过内网连接成功的双方，FN标志会是tmp_connect,会进入这个if
                         } else if (FN.equals("tmp_connect")) {
@@ -231,18 +238,31 @@ public class Chat extends AppCompatActivity {
                 }
             }
         });
+
+//        当用户按下左上角退出按钮，聊天页面
+        chatExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
+
+
+
 
     // 接收服务器的消息
     private void receiveMessages() {
         String message;
         try {
-            while ((message = input.readLine()) != null) {
+            // 这边循环接受信息的同时，也会检测socket连接是否断开，如果对方断开，则退出循环，执行finish退出当前页面
+            while ((message = input.readLine()) != null && !socket.isClosed()) {
                 Log.i("toad", "接收到消息: " + message);
                 String finalMessage = message;
                 runOnUiThread(() -> addMessage(finalMessage, FN)); // 更新UI，显示消息
                 scrollToBottom();
             }
+            finish();
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("toad", "消息接收失败: " + e.getMessage());
@@ -259,7 +279,7 @@ public class Chat extends AppCompatActivity {
         return response.getResult();
     }
 
-    //
+    // 在聊天界面添加一条动态添加一条消息
     private void addMessage(String message , String identify) {
         // 初始化一个新的对话框（按钮）
         Button message_btn = new Button(this);
@@ -273,17 +293,49 @@ public class Chat extends AppCompatActivity {
         // 设置margin属性
         params.bottomMargin = 100;
 
-        //设置文字
-        message_btn.setText(message);
+        // 这里判断聊天的对象需要是AI助手，并且不是发送方的信息
+        // 满足这两点，则增加的新信息使用流对话效果显示
+        if (FN.equals("AI助手") && !identify.equals("My")){
+            Log.i("toad", "addMessage: to stream");
+            // 使用 Handler 来设置定时任务
+            Handler handler = new Handler();
+            int delay = 50; // 每个字符的显示间隔，单位是毫秒
+
+            for (int i = 0; i < message.length(); i++) {
+                final int index = i;  // 记录当前字符的索引
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 设置按钮文本为当前字符之前的所有字符
+                        message_btn.setText(message.substring(0, index + 1));
+                    }
+                }, i * delay);  // 延迟显示每个字符
+            }
+        }else {
+            //设置文字
+            message_btn.setText(message);
+        }
+
 
         // 判断身份，如果是My，则设置右对齐，再设置颜色。反之，则设置对框左对齐
         if (identify.equals("My")){
             params.gravity = Gravity.RIGHT;
             message_btn.setBackgroundResource(R.drawable.button_shape_my);
+
+            message_btn.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 //            message_btn.setBackgroundColor(Color.parseColor("#2DC252"));
         }else {
             params.gravity = Gravity.LEFT;
             message_btn.setBackgroundResource(R.drawable.button_shape_opposition);
+            // 这里在显示对方的消息时，判断一下，如果是在和AI聊天的话，则文本左对齐显示，因为这样方便流对话有一个更好的显示效果
+            // 而如果不是在跟AI聊天，那么让文本在消息框中水平和横向都居中对齐
+            if (FN.equals("AI助手")){
+                message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL); // 设置文本左对齐
+                message_btn.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START); // 设置文本从视图的开始位置对齐
+            }else {
+                message_btn.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            }
+
         }
 
         //给按钮对象应用布局
@@ -291,6 +343,7 @@ public class Chat extends AppCompatActivity {
         //最后，将对话框（按钮）添加到主屏幕
         chatLayout.addView(message_btn);
     }
+
 
     private void scrollToBottom() {
         // 将输入框和按钮固定在最底下
@@ -301,10 +354,10 @@ public class Chat extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (socket != null && !socket.isClosed()) {
+        if (socket != null){
             try {
                 socket.close();
-                Toast.makeText(this, "Socket 连接已关闭", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "已断开连接！", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
