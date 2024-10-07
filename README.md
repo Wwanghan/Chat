@@ -7,5 +7,5 @@
 
 
 
-<img title="" src="https://mrtoad.online/chatDemo/chatDemo.gif" alt="ChatDemo" width="486">
+<img title="" src="./chatDemo.gif" alt="ChatDemo" width="486">
 
