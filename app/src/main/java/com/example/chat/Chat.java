@@ -1,6 +1,7 @@
 package com.example.chat;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +49,9 @@ public class Chat extends AppCompatActivity {
     private Button sendButton;
     private TextView showObject ;
     private ImageButton chatExit;
+    private LinearLayout.LayoutParams scrollParams;
+    private View rootView;
+    private boolean isShowVirtualKeyBoard;
     private String FN;
 
 
@@ -71,9 +78,11 @@ public class Chat extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
 
         socket = null;
+        isShowVirtualKeyBoard = false;
         // Friend Name ，用于表示好友名字的变量
         FN = getIntent().getStringExtra("friend_name");
 
@@ -113,8 +122,15 @@ public class Chat extends AppCompatActivity {
         sendButton = findViewById(R.id.sendButton);
         showObject = findViewById(R.id.showObject);
         chatExit = findViewById(R.id.chatExit);
+        rootView = findViewById(R.id.rootView);
 
         showObject.setText(FN);
+
+        scrollParams = (LinearLayout.LayoutParams) scrollView.getLayoutParams();
+        scrollParams.height = 0;
+        scrollParams.weight = 1;
+        scrollView.setLayoutParams(scrollParams);
+        scrollView.requestLayout();
 
         // 这里在用户刚进入聊天页面时，先手动将按钮设置为不可点击状态，背景设置为灰色
         // 因为下方检测输入框内容是当用户输入了任意内容或删除了任意内容才会触发
@@ -152,9 +168,61 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b){
-                    scrollToBottom();
+                    // 这里获取输入框焦点后，动态设置聊天区域的高度。并且将聊天区域滑动到最底部。
+                    rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            // 获取根视图的可见区域
+                            Rect rect = new Rect();
+                            rootView.getWindowVisibleDisplayFrame(rect);
+
+                            // 获取屏幕的整体高度
+                            int screenHeight = rootView.getRootView().getHeight();
+
+                            int keypadHeight = screenHeight - rect.bottom;
+
+                            // 判断键盘是否弹出（键盘高度大于屏幕高度的15%）
+                            if (keypadHeight > screenHeight * 0.15){
+                                // 键盘显示时，仅当键盘之前不可见时，才执行
+                                if (!isShowVirtualKeyBoard) {
+                                    isShowVirtualKeyBoard = true;  // 更新标志位，表示键盘已显示
+                                    Log.i("toad", "onGlobalLayout: keyboard is visible");
+                                    scrollParams.height = rect.bottom - 400;  // 预留400px给输入框和按钮
+                                    scrollParams.weight = 0;  // 移除权重
+                                    scrollView.setLayoutParams(scrollParams);
+                                    scrollView.requestLayout();
+                                    // 延迟执行滚动到底部的操作，确保内容加载完毕
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            scrollToBottom();
+                                        }
+                                    }, 100);  // 延迟100毫秒（可以根据情况调整）
+                                }
+                            } else {
+                                // 键盘收起时，仅当键盘之前是可见的，才执行
+                                if (isShowVirtualKeyBoard) {
+                                    isShowVirtualKeyBoard = false;  // 更新标志位，表示键盘已收起
+                                    Log.i("toad", "onGlobalLayout: keyboard is hidden");
+                                }
+                            }
+                        }
+                    });
                 }else {
-                    Log.i("toad", "onFocusChange: cannel Focus");
+                    scrollParams.height = 0;
+                    scrollParams.weight = 1;
+                    // 添加一定的延迟，以确保键盘动画完全结束
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isShowVirtualKeyBoard) {
+                                scrollParams.height = 0;  // 恢复到 weight 布局
+                                scrollParams.weight = 1;
+                                scrollView.setLayoutParams(scrollParams);
+                                scrollView.requestLayout();
+                            }
+                        }
+                    }, 200);  // 延迟200毫秒执行，确保键盘完全收起
                 }
             }
         });
@@ -249,8 +317,6 @@ public class Chat extends AppCompatActivity {
     }
 
 
-
-
     // 接收服务器的消息
     private void receiveMessages() {
         String message;
@@ -283,6 +349,8 @@ public class Chat extends AppCompatActivity {
     private void addMessage(String message , String identify) {
         // 初始化一个新的对话框（按钮）
         Button message_btn = new Button(this);
+        int message_btnHeight = message_btn.getHeight();
+        int tmp_height = message_btn.getHeight();
 
         // new一个布局对象，用于动态设置参数。这里使用了WRAP_CONTENT设置了按钮大小相对文本大小改变
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -307,6 +375,15 @@ public class Chat extends AppCompatActivity {
                     @Override
                     public void run() {
                         // 设置按钮文本为当前字符之前的所有字符
+                        // 这里通过实时获取文本的高度，保证当聊天内容超出聊天范围，程序会自动将聊天区域内容滑动到最底部
+                        int message_btnHeight = message_btn.getHeight();
+
+                        // 检测AI生成的内容是否超出聊天区域，超出则将页面滑至最底部，保证一个好的使用体验
+                        if (tmp_height != message_btnHeight){
+                            scrollToBottom();
+                        }
+                        int tmp_height = message_btnHeight;
+                        // 循环生成内容
                         message_btn.setText(message.substring(0, index + 1));
                     }
                 }, i * delay);  // 延迟显示每个字符
@@ -342,6 +419,7 @@ public class Chat extends AppCompatActivity {
         message_btn.setLayoutParams(params);
         //最后，将对话框（按钮）添加到主屏幕
         chatLayout.addView(message_btn);
+        scrollToBottom();
     }
 
 
