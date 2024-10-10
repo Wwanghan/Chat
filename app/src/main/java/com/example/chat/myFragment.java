@@ -29,6 +29,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +53,10 @@ myFragment extends Fragment {
 
     String info_content;  // 用于存放读取的文件信息
     private View view;
+    Button wlan_connect_btn;
+    private Button to_settings;
+    private Button to_aboutMe;
+
     private TextView chat;
 
     @Nullable
@@ -66,7 +72,9 @@ myFragment extends Fragment {
 //        TextView uid = view.findViewById(R.id.UID);
 //        uid.setText(info_content);
 
-        Button wlan_connect_btn = view.findViewById(R.id.WLAN_CONNECT_BTN);
+        wlan_connect_btn = view.findViewById(R.id.WLAN_CONNECT_BTN);
+        to_settings = view.findViewById(R.id.Settings);
+        to_aboutMe = view.findViewById(R.id.aboutMe);
 
         // 获取本机IP地址并显示在页面上
         TextView localIpAddress = view.findViewById(R.id.localIp);
@@ -98,7 +106,7 @@ myFragment extends Fragment {
                         try {
                             // 连接到服务器i
                             Socket socket = new Socket(serverAddress, serverPort);
-                            ((mySocket) getActivity().getApplication()).setSocket(socket);
+                            ((dataHub) getActivity().getApplication()).setSocket(socket);
                             getActivity().runOnUiThread(() -> {
                                 Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
 
@@ -122,6 +130,23 @@ myFragment extends Fragment {
 
                 // 显示对话框
                 builder.show();
+            }
+        });
+
+        to_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_settings = new Intent(getActivity() , activity_settings.class);
+                startActivity(intent_settings);
+
+            }
+        });
+
+        to_aboutMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_aboutMe = new Intent(getActivity() , activity_aboutMe.class);
+                startActivity(intent_aboutMe);
             }
         });
 

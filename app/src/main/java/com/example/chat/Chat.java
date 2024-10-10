@@ -81,6 +81,8 @@ public class Chat extends AppCompatActivity {
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
 
+        Log.i("toad", "delay = " + ((dataHub) getApplication()).getDelay());
+
         socket = null;
         isShowVirtualKeyBoard = false;
         // Friend Name ，用于表示好友名字的变量
@@ -91,7 +93,7 @@ public class Chat extends AppCompatActivity {
         // 如果是从内网连接方式双方连接成功后跳转到的聊天页面的话，那么FN是没有值的，为Null，if成立，进入if获取socket,开始聊天
         if (FN == null) {
             FN = "tmp_connect";
-            socket = ((mySocket) getApplication()).getSocket();
+            socket = ((dataHub) getApplication()).getSocket();
             if (socket != null && socket.isConnected()) {
                 try {
                     input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
@@ -203,6 +205,10 @@ public class Chat extends AppCompatActivity {
                                 // 键盘收起时，仅当键盘之前是可见的，才执行
                                 if (isShowVirtualKeyBoard) {
                                     isShowVirtualKeyBoard = false;  // 更新标志位，表示键盘已收起
+                                    scrollParams.height = 0;  // 恢复到 weight 布局
+                                    scrollParams.weight = 1;
+                                    scrollView.setLayoutParams(scrollParams);
+                                    scrollView.requestLayout();
                                     Log.i("toad", "onGlobalLayout: keyboard is hidden");
                                 }
                             }
@@ -367,7 +373,7 @@ public class Chat extends AppCompatActivity {
             Log.i("toad", "addMessage: to stream");
             // 使用 Handler 来设置定时任务
             Handler handler = new Handler();
-            int delay = 50; // 每个字符的显示间隔，单位是毫秒
+            int delay = ((dataHub) getApplication()).getDelay(); // 每个字符的显示间隔，单位是毫秒
 
             for (int i = 0; i < message.length(); i++) {
                 final int index = i;  // 记录当前字符的索引

@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--访问互联网权限-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--访问网络权限-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!--读和写权限-->
+    <!-- 访问互联网权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 访问网络权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 读和写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--获取本机WIFI权限-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 获取本机WIFI权限 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name=".mySocket"
+        android:name=".dataHub"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -25,7 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chat"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activity_aboutMe"
+            android:exported="false" />
+        <activity
+            android:name=".aboutMe"
+            android:exported="false" />
+        <activity
+            android:name=".activity_settings"
+            android:exported="false" />
         <activity
             android:name=".addFriendUi"
             android:exported="false" />
@@ -34,20 +37,17 @@
             android:exported="false" />
         <activity
             android:name=".Chat"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
     </application>
 
 </manifest>

@@ -65,7 +65,7 @@
     </View>
 
     <Button
-        android:id="@+id/Sttings"
+        android:id="@+id/Settings"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/Sttings"
@@ -75,7 +75,7 @@
         android:textColor="@color/black" />
 
     <Button
-        android:id="@+id/aboutUser"
+        android:id="@+id/aboutMe"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:text="@string/AboutUser"

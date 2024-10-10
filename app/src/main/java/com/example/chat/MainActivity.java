@@ -3,6 +3,7 @@ package com.example.chat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,11 +27,19 @@ public class MainActivity extends AppCompatActivity {
     private  myFragment myFragment;
     private ServerSocket serverSocket;
 
+    private file_os fs;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 在app刚运行时，读取配置文件
+        fs = new file_os();
+        ((dataHub) getApplication()).getConfig();
 
         chatFragment = new chatFragment();
         myFragment = new myFragment();
@@ -77,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("toad", "客户端已连接");
 
                 // 将连接保存到全局的 Application 中
-                ((mySocket) getApplication()).setSocket(socket);
+                ((dataHub) getApplication()).setSocket(socket);
 
                 // 跳转到聊天页面
                 runOnUiThread(() -> {
