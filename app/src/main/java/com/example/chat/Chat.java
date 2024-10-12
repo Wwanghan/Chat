@@ -16,9 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -115,7 +113,6 @@ public class Chat extends AppCompatActivity {
                 Log.i("toad", "Socket 连接失败");
             }
         }
-
 
         qianfan = new Qianfan(Auth.TYPE_OAUTH , BuildConfig.API_QIANFAN_AK, BuildConfig.API_QIANFAN_SK);
         chatLayout = findViewById(R.id.chatLayout);

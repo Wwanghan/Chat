@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:background="@color/white"
+
         android:orientation="horizontal">
 
         <ImageView
@@ -47,6 +48,26 @@
             android:textColor="#000000"
             android:text="IP:"
             />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <ImageButton
+            android:id="@+id/personalInformation"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/right_arrow"
+            android:background="@color/white"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            />
+
+
+
     </LinearLayout>
 
     <Button
@@ -68,7 +89,7 @@
         android:id="@+id/Settings"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="@string/Sttings"
+        android:text="@string/Settings"
         android:gravity="left"
         style="@style/CustomButton"
         android:background="@drawable/button_mypage"

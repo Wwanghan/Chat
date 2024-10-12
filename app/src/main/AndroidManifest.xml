@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Chat"
         tools:targetApi="31">
         <activity
+            android:name=".personal_information"
+            android:exported="false" />
+        <activity
             android:name=".activity_aboutMe"
             android:exported="false" />
         <activity

@@ -1,50 +1,39 @@
 package com.example.chat;
 
-import android.Manifest;
-import android.accessibilityservice.AccessibilityService;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Collections;
-import java.util.Formatter;
 import java.util.List;
-import java.util.Scanner;
+
 
 public class
 myFragment extends Fragment {
@@ -56,6 +45,7 @@ myFragment extends Fragment {
     Button wlan_connect_btn;
     private Button to_settings;
     private Button to_aboutMe;
+    private ImageButton toPersonalInformation;
 
     private TextView chat;
 
@@ -75,6 +65,7 @@ myFragment extends Fragment {
         wlan_connect_btn = view.findViewById(R.id.WLAN_CONNECT_BTN);
         to_settings = view.findViewById(R.id.Settings);
         to_aboutMe = view.findViewById(R.id.aboutMe);
+        toPersonalInformation = view.findViewById(R.id.personalInformation);
 
         // 获取本机IP地址并显示在页面上
         TextView localIpAddress = view.findViewById(R.id.localIp);
@@ -86,13 +77,31 @@ myFragment extends Fragment {
             public void onClick(View view) {
                 EditText input = new EditText(getActivity());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                lp.setMargins(40 , 20 , 0 , 0);
                 input.setLayoutParams(lp);
 
+                // 给输入框设置自定义的样式
+                input.setBackgroundResource(R.drawable.input_style);
+
+                // 等比例缩小输入框的大小，太大将对话框宽度占满，不好看
+                input.setScaleX(0.9f);
+                input.setScaleY(0.9f);
+
+                // 创建一个自定义的 TextView 作为标题
+                TextView title = new TextView(getActivity());
+                title.setText("请输入连接的内网IP");
+                title.setTextSize(20); // 设置标题字体大小
+                title.setGravity(Gravity.START); // 标题左对齐
+                title.setPadding(55, 30, 0, 10); // 设置标题的 padding (相当于 margin)，对位置进行微调
+
                 // 创建 AlertDialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("请输入连接的内网IP");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog);
+                // 使用自定义的标题
+                builder.setCustomTitle(title);
+                // 使用输入框
                 builder.setView(input);
 
                 // 设置“确认”按钮
@@ -101,38 +110,70 @@ myFragment extends Fragment {
                     String serverAddress = connect_ip; // 服务端地址
                     int serverPort = 9231; // 服务端端口
 
-                    // 启动新的线程进行网络连接
-                    new Thread(() -> {
-                        try {
-                            // 连接到服务器i
-                            Socket socket = new Socket(serverAddress, serverPort);
-                            ((dataHub) getActivity().getApplication()).setSocket(socket);
-                            getActivity().runOnUiThread(() -> {
-                                Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
+                    if (!input.getText().toString().isEmpty()){
+                        // 启动新的线程进行网络连接
+                        new Thread(() -> {
+                            try {
+                                // 创建一个带有超时设置的 SocketAddress
+                                InetSocketAddress socketAddress = new InetSocketAddress(serverAddress, serverPort);
+                                Socket socket = new Socket();
 
-                                // 连接成功后跳转到新页面
-                                Intent intent = new Intent(getActivity(), Chat.class); // 替换为你的新页面类名
-                                startActivity(intent);
-                                getActivity().finish(); // 可选，关闭当前页面
-                            });
+                                // 设置超时时间为1秒，因为是内网，只要确保连接的IP是正确的，连接速度很快的，1秒够用了
+                                socket.connect(socketAddress, 1000);
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            getActivity().runOnUiThread(() ->
-                                    Toast.makeText(getActivity(), "连接失败: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                            );
-                        }
-                    }).start();
+                                // 如果连接成功，设置 socket
+                                ((dataHub) getActivity().getApplication()).setSocket(socket);
+
+                                // 更新 UI，显示成功提示并跳转页面
+                                getActivity().runOnUiThread(() -> {
+                                    Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
+
+                                    // 连接成功后跳转到新页面
+                                    Intent intent = new Intent(getActivity(), Chat.class); // 替换为你的新页面类名
+                                    startActivity(intent);
+                                    getActivity().finish(); // 可选，关闭当前页面
+                                });
+
+                            } catch (SocketTimeoutException e) {
+                                // 处理连接超时的情况
+                                getActivity().runOnUiThread(() ->
+                                        Toast.makeText(getActivity(), "连接超时，请检查IP地址和网络。", Toast.LENGTH_SHORT).show()
+                                );
+                            } catch (UnknownHostException e) {
+                                // 处理无法解析IP地址的情况
+                                getActivity().runOnUiThread(() ->
+                                        Toast.makeText(getActivity(), "无效的IP地址: " + serverAddress, Toast.LENGTH_SHORT).show()
+                                );
+                            } catch (IOException e) {
+                                // 处理其他 I/O 异常 (例如网络问题)
+                                getActivity().runOnUiThread(() ->
+                                        Toast.makeText(getActivity(), "无法连接到服务器: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                );
+                            } catch (Exception e) {
+                                // 捕获其他异常
+                                getActivity().runOnUiThread(() ->
+                                        Toast.makeText(getActivity(), "连接失败: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                );
+                            }
+                        }).start();
+                    }else {
+                        Toast.makeText(getActivity() , "输入框不能为空" , Toast.LENGTH_SHORT).show();
+                    }
                 });
 
                 // 设置“取消”按钮
                 builder.setNegativeButton("取消", (dialog, which) -> dialog.cancel());
 
+                AlertDialog dialog = builder.create();
+                dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
+                dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_background);
                 // 显示对话框
-                builder.show();
+                dialog.show();
             }
         });
 
+        // 去到设置页面
         to_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,11 +183,21 @@ myFragment extends Fragment {
             }
         });
 
+        // 去到关于我页面
         to_aboutMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent_aboutMe = new Intent(getActivity() , activity_aboutMe.class);
                 startActivity(intent_aboutMe);
+            }
+        });
+
+        // 去到个人信息页面
+        toPersonalInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_personal_information = new Intent(getActivity() , personal_information.class);
+                startActivity(intent_personal_information);
             }
         });
 
