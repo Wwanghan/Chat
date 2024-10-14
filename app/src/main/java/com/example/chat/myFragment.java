@@ -1,5 +1,6 @@
 package com.example.chat;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -43,6 +44,7 @@ myFragment extends Fragment {
     private Button to_settings;
     private Button to_aboutMe;
     private ImageButton toPersonalInformation;
+    private TextView userName;
 
     private TextView chat;
 
@@ -63,14 +65,18 @@ myFragment extends Fragment {
         to_settings = view.findViewById(R.id.Settings);
         to_aboutMe = view.findViewById(R.id.aboutMe);
         toPersonalInformation = view.findViewById(R.id.personalInformation);
+        userName = view.findViewById(R.id.userName);
+
+        userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
 
         // 导入自己封装的对话框
         DialogUtils dialogUtils = new DialogUtils();
 
         // 获取本机IP地址并显示在页面上
-        TextView localIpAddress = view.findViewById(R.id.localIp);
-        String ipAddress = getIpAddress(getContext());
-        localIpAddress.setText("IP: " + ipAddress);
+        getIpAddress(getContext());
+//        TextView localIpAddress = view.findViewById(R.id.localIp);
+//        String ipAddress = getIpAddress(getContext());
+//        localIpAddress.setText("IP: " + ipAddress);
 
         wlan_connect_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +202,7 @@ myFragment extends Fragment {
 //    }
 
     // 用于获取本机IP地址，优先获取wifi,其次是数据网络
-    public static String getIpAddress(Context context) {
+    public int getIpAddress(Context context) {
         // 优先获取Wi-Fi的IP地址
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
@@ -207,21 +213,24 @@ myFragment extends Fragment {
 
             if (ipAddress != 0) {
                 // 转换Wi-Fi的IP地址为小数点分割的字符串形式返回
-                return (ipAddress & 0xFF) + "." +
+                String IP_ADDRESS =  (ipAddress & 0xFF) + "." +
                         ((ipAddress >> 8) & 0xFF) + "." +
                         ((ipAddress >> 16) & 0xFF) + "." +
                         ((ipAddress >> 24) & 0xFF);
+                ((dataHub) getActivity().getApplication()).setIpAddress(IP_ADDRESS);
+                return 1;
             }
         }
 
         // 如果Wi-Fi不可用，则获取移动数据网络的IP地址
         String mobileIpAddress = getMobileNetworkIpAddress(context);
         if (mobileIpAddress != null) {
-            return mobileIpAddress;
+            ((dataHub) getActivity().getApplication()).setIpAddress(mobileIpAddress);
+            return 1;
         }
 
         // Wi-Fi和数据网络都不可用时，返回提示
-        return "未获取本机IP地址";
+        return 0;
     }
 
     // 获取移动数据网络的IP地址

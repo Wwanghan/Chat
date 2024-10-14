@@ -79,8 +79,6 @@ public class Chat extends AppCompatActivity {
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
 
-        Log.i("toad", "delay = " + ((dataHub) getApplication()).getDelay());
-
         socket = null;
         isShowVirtualKeyBoard = false;
         // Friend Name ，用于表示好友名字的变量
@@ -90,12 +88,26 @@ public class Chat extends AppCompatActivity {
         // 只有通过内网连接，双方连接成功后，才会有socket，如果将获取socket的代码写在if的外面，那么获取不到socket则会闪退
         // 如果是从内网连接方式双方连接成功后跳转到的聊天页面的话，那么FN是没有值的，为Null，if成立，进入if获取socket,开始聊天
         if (FN == null) {
-            FN = "tmp_connect";
             socket = ((dataHub) getApplication()).getSocket();
             if (socket != null && socket.isConnected()) {
                 try {
                     input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
                     output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 添加短暂延迟，确保连接完成
+                            try {
+                                Thread.sleep(100); // 等待100毫秒
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            output.println("__SEND__NAME__" + ((dataHub) getApplication()).getName());
+                        }
+                    }).start();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.i("toad", "Socket 输入输出流初始化失败: " + e.getMessage());
@@ -279,14 +291,13 @@ public class Chat extends AppCompatActivity {
                             showObject.setText("发送成功，请等待AI回复...");
 
                             // 如果是通过内网连接成功的双方，FN标志会是tmp_connect,会进入这个if
-                        } else if (FN.equals("tmp_connect")) {
+                        } else {
                             // 开启子线程，将信息发送给对方
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
                                         output.println(message);
-                                        output.flush();
                                     } catch (Throwable t) {
                                         Log.i("toad", "Error: " + t.getMessage());
                                         t.printStackTrace();
@@ -326,7 +337,31 @@ public class Chat extends AppCompatActivity {
         try {
             // 这边循环接受信息的同时，也会检测socket连接是否断开，如果对方断开，则退出循环，执行finish退出当前页面
             while ((message = input.readLine()) != null && !socket.isClosed()) {
-                Log.i("toad", "接收到消息: " + message);
+
+                // 用于检测对方发过来的用户名，分别是发送和回复。连接方刚连接成功后，会发送一个__SEND__NAME__的标识
+                // 对方接收到带有__SEND__NAME__的标识，就会给FN设置对方的名字,再将自己的名字回复给对方，这样，双方就都有对方的名字了
+                if (message.startsWith("__SEND__NAME__")){
+                    // 剪切掉前面的 "__NAME__" 部分，只保留后面的内容
+                    FN = message.substring(14);
+
+                    runOnUiThread(() -> showObject.setText(FN));  // 在住线程更新
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            output.println("__REPLY__NAME__" + ((dataHub) getApplication()).getName());
+                        }
+                    }).start();
+                    continue;
+                }
+
+                // 用于判断是否是对方回复的用户名
+                if (message.startsWith("__REPLY__NAME__")){
+                    FN = message.substring(15);
+                    runOnUiThread(() -> showObject.setText(FN));
+                    continue;
+                }
+
+                // 发送用户手动输入的信息
                 String finalMessage = message;
                 runOnUiThread(() -> addMessage(finalMessage, FN)); // 更新UI，显示消息
                 scrollToBottom();

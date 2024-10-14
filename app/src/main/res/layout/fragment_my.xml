@@ -22,32 +22,14 @@
             />
 
         <TextView
+            android:id="@+id/userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="90dp"
             android:layout_marginLeft="10dp"
             android:textColor="#000000"
-            android:text="Name: Mr.toad"/>
-
-        <TextView
-            android:id="@+id/UID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="75dp"
-            android:layout_marginLeft="-93dp"
-            android:textColor="#000000"
-            android:text="ID: 10000"/>
-        <!--    UID后期为随机-->
-
-        <TextView
-            android:id="@+id/localIp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="-61dp"
-            android:textColor="#000000"
-            android:text="IP:"
             />
+
 
         <View
             android:layout_width="wrap_content"

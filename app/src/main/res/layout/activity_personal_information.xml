@@ -3,12 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_grey"
     >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/exitPage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/background_grey"
+            android:layout_gravity="center_vertical"
+            android:src="@mipmap/left_exit"
+            />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <TextView
@@ -20,19 +37,56 @@
             android:text="名字"
             />
 
+        <TextView
+            android:id="@+id/per_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40dp"
+            />
+
         <View
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/right_arrow"
+            android:background="@color/white"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IP"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:id="@+id/per_ipAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:text="Mr.toad"
+            android:layout_marginLeft="56dp"
             />
 
     </LinearLayout>

@@ -106,6 +106,7 @@ public class file_os {
                 JSONObject defaultConfig = new JSONObject();
                 try {
                     defaultConfig.put("streamDelay", "50");
+                    defaultConfig.put("Name" , "user_null");
                     // 你可以根据实际需求继续添加默认数据
 
                     // 写入默认配置到文件
