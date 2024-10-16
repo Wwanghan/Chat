@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:padding="30dp">
 
+<!--    暂时不做大的通信，先从小的内网通信做起
     <ImageButton
         android:id="@+id/add_friend_ui"
         android:layout_width="50dp"
@@ -19,104 +20,84 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:text="添加好友"/>
+-->
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="好友列表"
-        android:textSize="24sp"
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="40sp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"/>
-
-    <LinearLayout
-        android:id="@+id/friend1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="10dp">
 
         <ImageView
-            android:id="@+id/img1"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/ai"
-            android:contentDescription="Avatar"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/home_rounded_borders" />
 
         <TextView
-            android:id="@+id/text1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="AI助手"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"/>
-    </LinearLayout>
+            android:text="@string/BuddyList"
+            android:textSize="24sp"
+            android:layout_marginTop="3dp"
+            android:gravity="center_horizontal" />
+            <!--    这个对齐有点脑瘫，所以加了3dp    -->
+    </RelativeLayout>
 
-    <!--    下划线-->
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"
-        />
 
-    <LinearLayout
-        android:id="@+id/friend2"
+    <ScrollView
+        android:id="@+id/HomeScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:scrollbars="none"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="10dp"
-        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/mrtoad"
-            android:contentDescription="Avatar"/>
+            <LinearLayout
+                android:id="@+id/friend1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="好友2"
-            android:textSize="18sp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"/>
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ai"
+                    android:contentDescription="Avatar"/>
 
-    <!--    下划线-->
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"
-        />
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="AI助手"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"/>
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/friend3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-
-        android:layout_marginTop="10dp"
-        >
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/mrtoad"
-            android:contentDescription="Avatar"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="好友3"
-            android:textSize="18sp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"/>
-    </LinearLayout>
+            <!--    下划线-->
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/black" />
 
 
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="#11FFFFFF"
+                />
 
+        </LinearLayout>
 
+    </ScrollView>
 
 </LinearLayout>

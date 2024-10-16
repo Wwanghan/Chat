@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 主页上方的圆角边框 -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 填充颜色 -->
+    <solid android:color="#80C8C8C8" />
+
+    <!-- 边框颜色与宽度 -->
+    <stroke
+        android:color="#000000"
+        android:width="2dp" />
+
+    <!-- 圆角大小 -->
+    <corners android:radius="6000dp" />
+
+</shape>

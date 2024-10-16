@@ -1,40 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_grey"
-    android:orientation="vertical"
-    >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/background_grey"
+        android:orientation="vertical"
+        >
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/mrtoad"
-            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@color/white"
 
-        <TextView
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/mrtoad"
+                />
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="90dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="#000000"
+                />
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+
+            <ImageButton
+                android:id="@+id/personalInformation"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/right_arrow"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                />
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/WLAN_CONNECT_BTN"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="连接好友"
+            android:gravity="left"
+            style="@style/CustomButton"
+            android:background="@drawable/button_mypage"
+            android:textColor="@color/black"/>
+
+        <View
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_marginLeft="10dp"
-            android:textColor="#185519"
-            android:text="Name: Mr.toad"/>
+            android:layout_height="20dp">
+        </View>
 
-        <TextView
-            android:id="@+id/UID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="105dp"
-            android:layout_marginLeft="-93dp"
-            android:textColor="#FCDE70"/>
+        <Button
+            android:id="@+id/Settings"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/Settings"
+            android:gravity="left"
+            style="@style/CustomButton"
+            android:background="@drawable/button_mypage"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/aboutMe"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/AboutUser"
+            style="@style/CustomButton"
+            android:gravity="left"
+            android:background="@drawable/button_mypage"
+            android:textColor="@color/black"/>
+
     </LinearLayout>
 
-</LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

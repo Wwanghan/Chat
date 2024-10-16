@@ -1,16 +1,19 @@
 *.iml
 .gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+.idea/
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
+.gradle/
 local.properties
 gradle.properties
+app/release/
+.idea/deploymentTargetDropDown.xml
+.idea/.name
+.idea/deploymentTargetSelector.xml
+.idea/migrations.xml
+modified:   .idea/gradle.xml
+gradle/wrapper/gradle-wrapper.properties
