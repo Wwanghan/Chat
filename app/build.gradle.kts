@@ -58,5 +58,6 @@ dependencies {
     implementation("com.makeramen:roundedimageview:2.3.0")
 
     implementation("mysql:mysql-connector-java:5.1.30")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
 }

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -45,6 +46,7 @@ myFragment extends Fragment {
     private Button to_aboutMe;
     private ImageButton toPersonalInformation;
     private TextView userName;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private TextView chat;
 
@@ -65,6 +67,7 @@ myFragment extends Fragment {
         to_settings = view.findViewById(R.id.Settings);
         to_aboutMe = view.findViewById(R.id.aboutMe);
         toPersonalInformation = view.findViewById(R.id.personalInformation);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         userName = view.findViewById(R.id.userName);
 
         userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
@@ -156,6 +159,14 @@ myFragment extends Fragment {
             }
         });
 
+        // 刷新页面，调用refreshPage获取最新数据
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshPage();
+            }
+        });
+
     }
 
     @Override
@@ -200,6 +211,19 @@ myFragment extends Fragment {
 //            info_content = fs.readFromFile("chat_personalInformation.txt" , getActivity());
 //        }
 //    }
+
+    private void refreshPage() {
+        // 模拟数据刷新操作，300毫秒后结束刷新
+        swipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 数据加载完成，隐藏刷新动画
+                // 这里目前只是在本地获取最新数据，不花费什么时间，后面如果在数据库上获取最新数据，时间就不能写死。
+                getIpAddress(getContext());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 300);
+    }
 
     // 用于获取本机IP地址，优先获取wifi,其次是数据网络
     public int getIpAddress(Context context) {
@@ -267,5 +291,11 @@ myFragment extends Fragment {
         return null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+        getIpAddress(getContext());
+    }
 }
 

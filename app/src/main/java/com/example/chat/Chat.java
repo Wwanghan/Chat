@@ -262,57 +262,53 @@ public class Chat extends AppCompatActivity {
                 try {
                     // 当用户点击发送按钮之后，获取输入框中的内容，并保存在message变量当中
                     String message = messageInput.getText().toString();
+                    // 发送并将输入框的内容清空
+                    addMessage(message , "My");
+                    messageInput.setText("");
 
-                    // 这里判断message是否为空，这里通过取反来判断，如果为空，表示用户并没有在输入框中输入任何东西，那么也不必发送消息
-                    if (!message.isEmpty()){
-                        // 发送并将输入框的内容清空
-                        addMessage(message , "My");
-                        messageInput.setText("");
+                    // 模拟回复，聊天对象分为两类，一类是好友，另一个是AI语言大模型
+                    // 判断当前聊天的对象的名字，如果是AI助手，则表示在跟AI聊天，则进入下面这个if分支，否则就是好友，走else。
+                    if (FN.equals("AI助手")){
+                        // 这里需要调用大模型接口，需要请求网络。所以这里需要开启一个子线程去执行网络请求
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 调用我自己封装好的函数，函数封装了请求大模型的功能，只需要传递给它一个字符串，也就是你跟他聊天你的内容。
+                                // 这个内容上面已经保存在了message这个变量当中
+                                String aiResp = GetQianFanResponse(message);
 
-                        // 模拟回复，聊天对象分为两类，一类是好友，另一个是AI语言大模型
-                        // 判断当前聊天的对象的名字，如果是AI助手，则表示在跟AI聊天，则进入下面这个if分支，否则就是好友，走else。
-                        if (FN.equals("AI助手")){
-                            // 这里需要调用大模型接口，需要请求网络。所以这里需要开启一个子线程去执行网络请求
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // 调用我自己封装好的函数，函数封装了请求大模型的功能，只需要传递给它一个字符串，也就是你跟他聊天你的内容。
-                                    // 这个内容上面已经保存在了message这个变量当中
-                                    String aiResp = GetQianFanResponse(message);
+                                // 声明一个消息对象，用来存储大模型返回回来的消息结果，再给它设置一个唯一的数字表示0，方便主线程接收
+                                Message respMessage = new Message();
+                                respMessage.what = 0;
+                                respMessage.obj = aiResp;
+                                // 将信息发送给主线程
+                                M_Handler.sendMessage(respMessage);
+                            }
+                        }).start();
+                        showObject.setText("发送成功，请等待AI回复...");
 
-                                    // 声明一个消息对象，用来存储大模型返回回来的消息结果，再给它设置一个唯一的数字表示0，方便主线程接收
-                                    Message respMessage = new Message();
-                                    respMessage.what = 0;
-                                    respMessage.obj = aiResp;
-                                    // 将信息发送给主线程
-                                    M_Handler.sendMessage(respMessage);
+                        // 如果是通过内网连接成功的双方，FN标志会是tmp_connect,会进入这个if
+                    } else {
+                        // 开启子线程，将信息发送给对方
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    output.println(message);
+                                } catch (Throwable t) {
+                                    Log.i("toad", "Error: " + t.getMessage());
+                                    t.printStackTrace();
+                                } finally {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // 等信息发送完毕后，再滑动滚轮
+                                            scrollToBottom();
+                                        }
+                                    });
                                 }
-                            }).start();
-                            showObject.setText("发送成功，请等待AI回复...");
-
-                            // 如果是通过内网连接成功的双方，FN标志会是tmp_connect,会进入这个if
-                        } else {
-                            // 开启子线程，将信息发送给对方
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        output.println(message);
-                                    } catch (Throwable t) {
-                                        Log.i("toad", "Error: " + t.getMessage());
-                                        t.printStackTrace();
-                                    } finally {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                // 等信息发送完毕后，再滑动滚轮
-                                                scrollToBottom();
-                                            }
-                                        });
-                                    }
-                                }
-                            }).start();
-                        }
+                            }
+                        }).start();
                     }
                 } catch (Exception e){
                     e.printStackTrace();
