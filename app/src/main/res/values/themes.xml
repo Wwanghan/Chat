@@ -1,0 +1,40 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Chat" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.Chat" parent="Base.Theme.Chat" />
+
+    <style name="CustomButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@null</item>
+    </style>
+
+    <style name="fragment">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@drawable/rb_text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/white</item> <!-- 对话框背景 -->
+        <item name="android:textColorPrimary">#000000</item> <!-- 设置主要文字颜色 -->
+        <item name="android:buttonBarPositiveButtonStyle">@style/CustomDialogButton</item> <!-- 自定义确认按钮 -->
+        <item name="android:buttonBarNegativeButtonStyle">@style/CustomDialogButton</item> <!-- 自定义取消按钮 -->
+    </style>
+
+    <style name="CustomDialogButton">
+        <item name="android:textColor">@color/black</item> <!-- 将按钮文本设置为红色，方便检查是否为颜色问题 -->
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+</resources>

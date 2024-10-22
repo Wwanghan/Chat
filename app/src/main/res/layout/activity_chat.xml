@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootView"
+    android:background="@color/background_grey"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/background_grey"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/chatExit"
+            android:background="@color/background_grey"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/left_exit"
+            />
+
+        <!-- 用一个空白的View来占用左侧空间 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/showObject"
+            android:paddingLeft="15dp"
+            android:textColor="@color/object_color"
+            android:layout_width="wrap_content"
+            android:textSize="18dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="60dp"
+            android:text="AI助手"
+            android:layout_height="wrap_content"/>
+
+        <!-- 用一个空白的View来占用右侧空间 -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <!-- ScrollView 包含聊天内容 -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transcriptMode="alwaysScroll"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/chatLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+    </ScrollView>
+
+    <!-- 输入区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/messageInput"
+            android:layout_width="0dp"
+            android:layout_height="33dp"
+            android:paddingStart="10dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/input_style"
+            android:layout_weight="1"
+            android:hint="请输入信息"/>
+
+        <Button
+            android:id="@+id/sendButton"
+            style="@style/CustomButton"
+            android:layout_width="74dp"
+            android:layout_height="33dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/send_button_style"
+            android:text="发送"
+            android:textSize="11dp" />
+    </LinearLayout>
+</LinearLayout>
