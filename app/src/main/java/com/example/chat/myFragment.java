@@ -3,18 +3,22 @@ package com.example.chat;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +27,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.bumptech.glide.Glide;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -47,6 +53,7 @@ myFragment extends Fragment {
     private ImageButton toPersonalInformation;
     private TextView userName;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ImageView myAvatar;
 
     private TextView chat;
 
@@ -69,6 +76,7 @@ myFragment extends Fragment {
         toPersonalInformation = view.findViewById(R.id.personalInformation);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         userName = view.findViewById(R.id.userName);
+        myAvatar = view.findViewById(R.id.myAvatar);
 
         userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
 
@@ -77,9 +85,26 @@ myFragment extends Fragment {
 
         // 获取本机IP地址并显示在页面上
         getIpAddress(getContext());
-//        TextView localIpAddress = view.findViewById(R.id.localIp);
-//        String ipAddress = getIpAddress(getContext());
-//        localIpAddress.setText("IP: " + ipAddress);
+
+        // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
+        // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyApp", Context.MODE_PRIVATE);
+        String avatarUriString = sharedPreferences.getString("avatarUri", null);
+        if (avatarUriString != null) {
+            Uri avatarUri = Uri.parse(avatarUriString);
+            try {
+                ((dataHub) getActivity().getApplication()).setAvatar(avatarUri);
+                myAvatar.setImageURI(((dataHub) getActivity().getApplication()).getAvatar());
+                // 使用 Glide 加载图片并裁剪为圆形
+                Glide.with(this).load(((dataHub) getActivity().getApplication()).getAvatar()).circleCrop().into(myAvatar);
+            } catch (SecurityException e) {
+                Log.e("MainActivity", "Uri 权限失效: " + e.getMessage());
+            }
+        }else {
+            myAvatar.setImageResource(R.mipmap.mrtoad);
+            // 使用 Glide 加载图片并裁剪为圆形
+            Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(myAvatar);
+        }
 
         wlan_connect_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,6 +320,8 @@ myFragment extends Fragment {
     public void onResume() {
         super.onResume();
         userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+        myAvatar.setImageURI(((dataHub) getActivity().getApplication()).getAvatar());
+        Glide.with(this).load(((dataHub) getActivity().getApplication()).getAvatar()).circleCrop().into(myAvatar);
         getIpAddress(getContext());
     }
 }

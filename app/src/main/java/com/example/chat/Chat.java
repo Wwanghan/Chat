@@ -1,7 +1,12 @@
 package com.example.chat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +17,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -21,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ScrollView;
 
@@ -30,9 +37,13 @@ import android.widget.Toast;
 import com.baidubce.qianfan.Qianfan;
 import com.baidubce.qianfan.core.auth.Auth;
 import com.baidubce.qianfan.model.chat.ChatResponse;
+import com.bumptech.glide.Glide;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -57,6 +68,13 @@ public class Chat extends AppCompatActivity {
     private BufferedReader input;
     private PrintWriter output;
     private TextView textViewChat;
+
+    private ImageButton avatar;
+    // 用于存储接收到的图像
+    private Bitmap targetAvatar;
+
+    private Bitmap avatarBitmap;
+
     // Handler 用于接受子线程传递过来的参数，
     private Handler M_Handler = new Handler(Looper.myLooper()){
         @Override
@@ -103,7 +121,7 @@ public class Chat extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-
+                            // 发送名字和头像
                             output.println("__SEND__NAME__" + ((dataHub) getApplication()).getName());
                         }
                     }).start();
@@ -197,7 +215,6 @@ public class Chat extends AppCompatActivity {
                                 // 键盘显示时，仅当键盘之前不可见时，才执行
                                 if (!isShowVirtualKeyBoard) {
                                     isShowVirtualKeyBoard = true;  // 更新标志位，表示键盘已显示
-                                    Log.i("toad", "onGlobalLayout: keyboard is visible");
                                     scrollParams.height = rect.bottom - 400;  // 预留400px给输入框和按钮
                                     scrollParams.weight = 0;  // 移除权重
                                     scrollView.setLayoutParams(scrollParams);
@@ -326,14 +343,13 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-
     // 接收服务器的消息
     private void receiveMessages() {
         String message;
         try {
             // 这边循环接受信息的同时，也会检测socket连接是否断开，如果对方断开，则退出循环，执行finish退出当前页面
             while ((message = input.readLine()) != null && !socket.isClosed()) {
-
+                Log.i("toad", "Received message: " + message);  // 打印每条接收到的消息
                 // 用于检测对方发过来的用户名，分别是发送和回复。连接方刚连接成功后，会发送一个__SEND__NAME__的标识
                 // 对方接收到带有__SEND__NAME__的标识，就会给FN设置对方的名字,再将自己的名字回复给对方，这样，双方就都有对方的名字了
                 if (message.startsWith("__SEND__NAME__")){
@@ -369,6 +385,7 @@ public class Chat extends AppCompatActivity {
         }
     }
 
+
     private String GetQianFanResponse(String message) {
         // 调用文心一言接口
         ChatResponse response = qianfan.chatCompletion()
@@ -381,8 +398,17 @@ public class Chat extends AppCompatActivity {
 
     // 在聊天界面添加一条动态添加一条消息
     private void addMessage(String message , String identify) {
+        // 首先，创建一个 LinearLayout 来包含文本和 ImageButton
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);  // 设置为水平布局
+        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+
         // 初始化一个新的对话框（按钮）
         Button message_btn = new Button(this);
+        avatar = new ImageButton(this);
+
         int message_btnHeight = message_btn.getHeight();
         int tmp_height = message_btn.getHeight();
 
@@ -395,10 +421,24 @@ public class Chat extends AppCompatActivity {
         // 设置margin属性
         params.bottomMargin = 100;
 
+        // 设置 ImageButton 的大小（确保图片不大）
+        LinearLayout.LayoutParams imageButtonParams = new LinearLayout.LayoutParams(
+                200, // 宽度，单位为像素，100px 只是示例，你可以根据需要调整
+                200  // 高度，单位为像素
+        );
+        imageButtonParams.setMargins(0, -30, 0, 0);  // 设置左边距，以便与文本有间隔
+        avatar.setLayoutParams(imageButtonParams);
+
+        // 设置图片等比例缩放
+        avatar.setScaleType(ImageButton.ScaleType.FIT_CENTER);
+        avatar.setAdjustViewBounds(true);  // 调整视图边界以保持图片比例
+
+        // 设置 ImageButton 的背景为透明（如果不需要显示背景）
+        avatar.setBackgroundColor(Color.TRANSPARENT);
+
         // 这里判断聊天的对象需要是AI助手，并且不是发送方的信息
         // 满足这两点，则增加的新信息使用流对话效果显示
         if (FN.equals("AI助手") && !identify.equals("My")){
-            Log.i("toad", "addMessage: to stream");
             // 使用 Handler 来设置定时任务
             Handler handler = new Handler();
             int delay = ((dataHub) getApplication()).getDelay(); // 每个字符的显示间隔，单位是毫秒
@@ -427,32 +467,69 @@ public class Chat extends AppCompatActivity {
             message_btn.setText(message);
         }
 
+        //给按钮对象应用布局
+        message_btn.setLayoutParams(params);
 
         // 判断身份，如果是My，则设置右对齐，再设置颜色。反之，则设置对框左对齐
-        if (identify.equals("My")){
-            params.gravity = Gravity.RIGHT;
-            message_btn.setBackgroundResource(R.drawable.button_shape_my);
+        // 判断身份，如果是My，则设置右对齐，再设置颜色。反之，则设置对框左对齐
+        if (identify.equals("My")) {
+            // 设置图片资源，动态获取头像
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyApp" , Context.MODE_PRIVATE);
+            String avatarUriString = sharedPreferences.getString("avatarUri", null);
+            if (avatarUriString != null) {
+                Uri avatarUri = Uri.parse(avatarUriString);
+                try {
+                    ((dataHub) getApplication()).setAvatar(avatarUri);
+                    avatar.setImageURI(((dataHub) getApplication()).getAvatar());
+                    // 将头像裁剪为圆形
+                    Glide.with(this)
+                            .load(avatarUri)
+                            .circleCrop()
+                            .into(avatar);
 
+                } catch (SecurityException e) {
+                    Log.e("MainActivity", "Uri 权限失效: " + e.getMessage());
+                }
+            }else {
+                avatar.setImageResource(R.mipmap.mrtoad);
+                // 将头像裁剪为圆形
+                Glide.with(this)
+                        .load(R.mipmap.mrtoad)
+                        .circleCrop()
+                        .into(avatar);
+            }
+
+            // 将整个 LinearLayout 右对齐
+            linearLayout.setGravity(Gravity.RIGHT);
+            message_btn.setBackgroundResource(R.drawable.button_shape_my);
             message_btn.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-//            message_btn.setBackgroundColor(Color.parseColor("#2DC252"));
-        }else {
-            params.gravity = Gravity.LEFT;
+            linearLayout.addView(message_btn);
+            linearLayout.addView(avatar);
+        } else {
+            linearLayout.setGravity(Gravity.LEFT);  // 将整个 LinearLayout 左对齐
             message_btn.setBackgroundResource(R.drawable.button_shape_opposition);
-            // 这里在显示对方的消息时，判断一下，如果是在和AI聊天的话，则文本左对齐显示，因为这样方便流对话有一个更好的显示效果
-            // 而如果不是在跟AI聊天，那么让文本在消息框中水平和横向都居中对齐
-            if (FN.equals("AI助手")){
+
+            // 根据是否为AI助手判断文本对齐方式
+            if (FN.equals("AI助手")) {
+                // 设置AI图片
+                avatar.setImageResource(R.drawable.ai);
+                // 将头像裁剪为圆形
+                Glide.with(this).load(R.drawable.ai).circleCrop().into(avatar);
                 message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL); // 设置文本左对齐
                 message_btn.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START); // 设置文本从视图的开始位置对齐
-            }else {
+            } else {
+            //  这里设置对方的头像，目前还没用到服务器，所以对方头像默认小青蛙，后面将数据库搭建好后，从数据库获取用户头像
+                targetAvatar = BitmapFactory.decodeResource(getResources() , R.mipmap.mrtoad);
+                avatar.setImageBitmap(targetAvatar);
+                Glide.with(this).load(targetAvatar).circleCrop().into(avatar);
                 message_btn.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             }
 
+            linearLayout.addView(avatar);
+            linearLayout.addView(message_btn);
         }
 
-        //给按钮对象应用布局
-        message_btn.setLayoutParams(params);
-        //最后，将对话框（按钮）添加到主屏幕
-        chatLayout.addView(message_btn);
+        chatLayout.addView(linearLayout);
         scrollToBottom();
     }
 

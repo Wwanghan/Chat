@@ -1,6 +1,7 @@
 package com.example.chat;
 
 import android.app.Application;
+import android.net.Uri;
 
 import java.net.Socket;
 
@@ -11,6 +12,8 @@ public class dataHub extends Application {
     private String Name; // 保存用户名
     private String targetName; // 保存对方的名字
     private String ipAddress;
+
+    private Uri myAvatar = null;
 
     file_os fs = new file_os();
 
@@ -40,6 +43,9 @@ public class dataHub extends Application {
     public void setIpAddress(String ipaddress) { this.ipAddress = ipaddress; }
     public String getIpAddress(){ return this.ipAddress; }
 
+
+    public void setAvatar(Uri Avatar){ this.myAvatar = Avatar; }
+    public Uri getAvatar(){ return this.myAvatar; }
 
 
 }

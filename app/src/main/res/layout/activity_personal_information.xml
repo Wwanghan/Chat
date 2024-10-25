@@ -22,6 +22,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/per_myAvatar"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layoutName"
         android:layout_width="match_parent"
         android:layout_height="50dp"

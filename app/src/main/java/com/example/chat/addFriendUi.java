@@ -120,7 +120,7 @@ public class addFriendUi extends AppCompatActivity {
         LinearLayout.LayoutParams avatarParams = new LinearLayout.LayoutParams(150, 150); // 宽高为 60dp
         avatarParams.setMargins(20, 20, 0, 0); // 左边距 10dp, 上边距 20dp
         avatar.setLayoutParams(avatarParams);
-        avatar.setImageResource(R.drawable.mrtoad);
+        avatar.setImageResource(R.mipmap.mrtoad);
 
         // 创建第一个 TextView (用于显示名字)
         TextView friendName = new TextView(this);
