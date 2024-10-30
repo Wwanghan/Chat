@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<!--    themes-->
+    <color name="colorPrimaryDark">#BBC4C2</color>
+
+    <color name="pink_gradient">#FFE3E3</color>
+
+
 <!--    D1E9F6-->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

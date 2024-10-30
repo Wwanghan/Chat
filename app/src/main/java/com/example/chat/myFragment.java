@@ -30,14 +30,27 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 public class
@@ -56,7 +69,6 @@ myFragment extends Fragment {
     private ImageView myAvatar;
 
     private TextView chat;
-
     @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_my, container, false);
@@ -112,7 +124,7 @@ myFragment extends Fragment {
                 // 创建输入框
                 EditText input = new EditText(getActivity());
                 // 调用封装的对话框函数
-                DialogUtils.showConnectDialog(getActivity(), "请输入连接的内网IP", "确认" , input , (dialog, which) -> {
+                DialogUtils.showDialog(getActivity(),  "input" ,"请输入连接的内网IP", "确认" , input , (dialog, which) -> {
                     String connect_ip = input.getText().toString();
                     String serverAddress = connect_ip;
                     int serverPort = 9231;
@@ -191,6 +203,34 @@ myFragment extends Fragment {
                 refreshPage();
             }
         });
+
+        // 测试对数据库发送增删改查的请求，成功！
+        // 但现在暂时不使用数据库，暂时先将请求的代码保留
+//        test_db.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        myDatabase myDatabase = new myDatabase();
+//                        myDatabase.executeCommand("select * from user", "queryData", new Callback() {
+//                            @Override
+//                            public void onFailure(@NonNull Call call, @NonNull IOException e) {}
+//
+//                            @Override
+//                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//                                if (response.isSuccessful()) {
+//                                    String responseBody = response.body().string();
+//                                    // 处理成功返回的结果
+//                                    Log.i("toad", "onResponse: " + responseBody);
+//                                }
+//                            }
+//                        });
+//                    }
+//                }).start();
+//            }
+//        });
+
 
     }
 

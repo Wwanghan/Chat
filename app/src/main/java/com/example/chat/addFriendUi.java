@@ -50,7 +50,7 @@ public class addFriendUi extends AppCompatActivity {
 //                如果变量为空，则表示输入框为空，则不做任何事，并提醒用户输入框内容为空
                 String friendUid = searchFriendInput.getText().toString();
                 if (!TextUtils.isEmpty(friendUid)){
-                    searchFriend(friendUid);
+//                    searchFriend(friendUid);
                 }else {
                     Toast.makeText(addFriendUi.this  , "输入的内容为空" , Toast.LENGTH_SHORT).show();
                 }
@@ -59,47 +59,47 @@ public class addFriendUi extends AppCompatActivity {
     }
 
 //    执行搜索好友的逻辑
-    private void searchFriend(String friendUid) {
-        get_mysql_data myDB = new get_mysql_data();
-        handler = new Handler(Looper.getMainLooper());
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String result = myDB.querySqlData("Chat" ,"select * from Users where UID = " + friendUid);
-                Log.i("toad", "result = " + result);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-//                      给NAME和UID设置一个初始值。如果result为空，也就是没有通过UID或名字找到对应的好友
-//                      那么result的结果是[]，那么下面也就不会进入for循环，NAME和UID的值也就不会更新。
-//                      所以，下面两行代码是必要的
-                        NAME = null;
-                        UID = -1;
-                        try {
-                            JSONArray jsonArray = new JSONArray(result);
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                UID = jsonObject.getInt("UID");
-                                NAME = jsonObject.getString("NAME");
-                            }
-//                          判断是否找到了数据，如果搜索的结果为空，那么NAME一定为Null
-                            if (NAME == null){
-                                get_card("未找到好友" , -1);
-                            }else {
-                                get_card(NAME, UID);
-                            }
-
-                        } catch (JSONException e){
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
+//    private void searchFriend(String friendUid) {
+//        get_mysql_data myDB = new get_mysql_data();
+//        handler = new Handler(Looper.getMainLooper());
+//
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+////                String result = myDB.executeSql("Chat" ,"select * from Users where UID = " + friendUid , "query");
+////                Log.i("toad", "result = " + result);
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+////                      给NAME和UID设置一个初始值。如果result为空，也就是没有通过UID或名字找到对应的好友
+////                      那么result的结果是[]，那么下面也就不会进入for循环，NAME和UID的值也就不会更新。
+////                      所以，下面两行代码是必要的
+//                        NAME = null;
+//                        UID = -1;
+//                        try {
+//                            JSONArray jsonArray = new JSONArray(result);
+//
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                                UID = jsonObject.getInt("UID");
+//                                NAME = jsonObject.getString("NAME");
+//                            }
+////                          判断是否找到了数据，如果搜索的结果为空，那么NAME一定为Null
+//                            if (NAME == null){
+//                                get_card("未找到好友" , -1);
+//                            }else {
+//                                get_card(NAME, UID);
+//                            }
+//
+//                        } catch (JSONException e){
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                });
+//            }
+//        }).start();
+//    }
 
     public void get_card(String name , int Uid){
         Log.i("toad", "get_card: name = " + name + "uid = " + Uid);

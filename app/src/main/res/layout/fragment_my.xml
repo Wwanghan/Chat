@@ -93,8 +93,8 @@
             android:gravity="left"
             android:background="@drawable/button_mypage"
             android:textColor="@color/black"/>
-
     </LinearLayout>
+
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

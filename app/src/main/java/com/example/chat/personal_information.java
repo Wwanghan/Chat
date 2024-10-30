@@ -79,7 +79,7 @@ public class personal_information extends AppCompatActivity {
                 // 创建输入框
                 EditText input = new EditText(personal_information.this);
                 // 调用封装好的 dialogUtils
-                dialogUtils.showConnectDialog(personal_information.this, "请输入新名字", "确认" , input ,
+                dialogUtils.showDialog(personal_information.this, "input" , "请输入新名字", "确认" , input ,
                         (dialog, which) -> {
                             String newName = input.getText().toString();
                             perUserName.setText(newName);

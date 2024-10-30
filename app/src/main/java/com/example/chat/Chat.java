@@ -58,6 +58,7 @@ public class Chat extends AppCompatActivity {
     private Button sendButton;
     private TextView showObject ;
     private ImageButton chatExit;
+    private ImageButton chatMore;
     private LinearLayout.LayoutParams scrollParams;
     private View rootView;
     private boolean isShowVirtualKeyBoard;
@@ -151,6 +152,7 @@ public class Chat extends AppCompatActivity {
         sendButton = findViewById(R.id.sendButton);
         showObject = findViewById(R.id.showObject);
         chatExit = findViewById(R.id.chatExit);
+        chatMore = findViewById(R.id.chatMore);
         rootView = findViewById(R.id.rootView);
 
         showObject.setText(FN);
@@ -160,6 +162,10 @@ public class Chat extends AppCompatActivity {
         scrollParams.weight = 1;
         scrollView.setLayoutParams(scrollParams);
         scrollView.requestLayout();
+
+        // 给退出和更多按钮设置透明背景
+        chatExit.setBackgroundColor(Color.TRANSPARENT);
+        chatMore.setBackgroundColor(Color.TRANSPARENT);
 
         // 这里在用户刚进入聊天页面时，先手动将按钮设置为不可点击状态，背景设置为灰色
         // 因为下方检测输入框内容是当用户输入了任意内容或删除了任意内容才会触发
@@ -473,6 +479,8 @@ public class Chat extends AppCompatActivity {
         // 判断身份，如果是My，则设置右对齐，再设置颜色。反之，则设置对框左对齐
         // 判断身份，如果是My，则设置右对齐，再设置颜色。反之，则设置对框左对齐
         if (identify.equals("My")) {
+            // 限制消息按钮的最大宽度，防止内容过长时超出屏幕
+            message_btn.setMaxWidth(getResources().getDisplayMetrics().widthPixels - 300); // 留出头像的宽度
             // 设置图片资源，动态获取头像
             SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyApp" , Context.MODE_PRIVATE);
             String avatarUriString = sharedPreferences.getString("avatarUri", null);

@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.chat"
-    compileSdk = 33
+    compileSdk = 34
 
     // 启用 buildConfig 功能
     buildFeatures {
@@ -18,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         // 获取数据库密钥
-        buildConfigField("String", "API_KEY", "\"${project.findProperty("SQL_API_KEY") as String}\"")
+        buildConfigField("String", "SQL_API_KEY", "\"${project.findProperty("SQL_API_KEY") as String}\"")
         // 获取千帆大模型所需要的密钥
         buildConfigField("String", "API_QIANFAN_AK", "\"${project.findProperty("QIANFAN_AK") as String}\"")
         buildConfigField("String", "API_QIANFAN_SK", "\"${project.findProperty("QIANFAN_SK") as String}\"")
@@ -48,16 +48,16 @@ android {
 
 dependencies {
 
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation("com.baidubce:qianfan:0.1.0")
     implementation("com.makeramen:roundedimageview:2.3.0")
 
-    implementation("mysql:mysql-connector-java:5.1.30")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     implementation("com.github.bumptech.glide:glide:4.12.0")
