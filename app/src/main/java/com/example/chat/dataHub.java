@@ -7,7 +7,7 @@ import java.net.Socket;
 
 public class dataHub extends Application {
 
-    private Socket socket;
+    private Socket Socket;
     private int Delay;  // AI流对话延迟
     private String Name; // 保存用户名
     private String targetName; // 保存对方的名字
@@ -24,10 +24,10 @@ public class dataHub extends Application {
 
 
     public Socket getSocket() {
-        return socket;
+        return Socket;
     }
     public void setSocket(Socket socket) {
-        this.socket = socket;
+        this.Socket = socket;
     }
 
 

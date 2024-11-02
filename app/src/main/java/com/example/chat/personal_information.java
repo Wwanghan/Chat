@@ -25,10 +25,9 @@ public class personal_information extends AppCompatActivity {
 
     private LinearLayout layoutName;
     private ImageButton exitPage;
-    private TextView perUserName;
-    private TextView perIpAddress;
-    private ImageView perMyAvatar;
-    private boolean isChangeAvatar;
+    private TextView userName;
+    private TextView userIpAddress;
+    private ImageView userAvatar;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
 
     @Override
@@ -37,23 +36,18 @@ public class personal_information extends AppCompatActivity {
         setContentView(R.layout.activity_personal_information);
 
         DialogUtils dialogUtils = new DialogUtils();
-
         file_os fs = new file_os();
-
-        isChangeAvatar = false;
 
         layoutName = findViewById(R.id.layoutName);
         exitPage = findViewById(R.id.exitPage);
-        perUserName = findViewById(R.id.per_userName);
-        perIpAddress = findViewById(R.id.per_ipAddress);
-        perMyAvatar = findViewById(R.id.per_myAvatar);
+        userName = findViewById(R.id.userName);
+        userIpAddress = findViewById(R.id.userIpAddress);
+        userAvatar = findViewById(R.id.userAvatar);
         // 设置头像透明背景
-        perMyAvatar.setBackgroundColor(Color.TRANSPARENT);
+        userAvatar.setBackgroundColor(Color.TRANSPARENT);
 
-        perUserName.setText(((dataHub) getApplication()).getName());
-        perIpAddress.setText(((dataHub) getApplication()).getIpAddress());
-
-
+        userName.setText(((dataHub) getApplication()).getName());
+        userIpAddress.setText(((dataHub) getApplication()).getIpAddress());
 
         // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
         // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
@@ -62,14 +56,14 @@ public class personal_information extends AppCompatActivity {
         if (avatarUriString != null) {
             Uri avatarUri = Uri.parse(avatarUriString);
             try {
-                perMyAvatar.setImageURI(avatarUri);
-                Glide.with(this).load(avatarUri).circleCrop().into(perMyAvatar);
+                userAvatar.setImageURI(avatarUri);
+                Glide.with(this).load(avatarUri).circleCrop().into(userAvatar);
             } catch (SecurityException e) {
                 Log.e("MainActivity", "Uri 权限失效: " + e.getMessage());
             }
         }else {
-            perMyAvatar.setImageResource(R.mipmap.mrtoad);
-            Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(perMyAvatar);
+            userAvatar.setImageResource(R.mipmap.mrtoad);
+            Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(userAvatar);
         }
 
 
@@ -82,7 +76,7 @@ public class personal_information extends AppCompatActivity {
                 dialogUtils.showDialog(personal_information.this, "input" , "请输入新名字", "确认" , input ,
                         (dialog, which) -> {
                             String newName = input.getText().toString();
-                            perUserName.setText(newName);
+                            userName.setText(newName);
                             ((dataHub) getApplication()).setName(newName);
                             fs.updateConfig("chatConfig.conf" , "Name" , newName , getBaseContext());
                             Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
@@ -93,7 +87,7 @@ public class personal_information extends AppCompatActivity {
         });
 
         // 用户点击按钮后，会调用本地相册，用户可以自己选择头像
-        perMyAvatar.setOnClickListener(new View.OnClickListener() {
+        userAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intentChangeAvatar = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -131,14 +125,14 @@ public class personal_information extends AppCompatActivity {
                 editor.apply();
 
                 // 显示图片
-                perMyAvatar.setImageURI(selectedImageUri);
+                userAvatar.setImageURI(selectedImageUri);
                 // 设置图片等比例缩放
-                perMyAvatar.setScaleType(ImageButton.ScaleType.FIT_CENTER);
-                perMyAvatar.setAdjustViewBounds(true);  // 调整视图边界以保持图片比例
+                userAvatar.setScaleType(ImageButton.ScaleType.FIT_CENTER);
+                userAvatar.setAdjustViewBounds(true);  // 调整视图边界以保持图片比例
 
 //                将图片上传数据中心，并裁剪图片为圆形
                 ((dataHub) getApplication()).setAvatar(selectedImageUri);
-                Glide.with(this).load(((dataHub) getApplication()).getAvatar()).circleCrop().into(perMyAvatar);
+                Glide.with(this).load(((dataHub) getApplication()).getAvatar()).circleCrop().into(userAvatar);
             }
         }
     }

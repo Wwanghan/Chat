@@ -12,7 +12,7 @@
 
         <!-- 搜索好友的 EditText -->
         <EditText
-            android:id="@+id/search_friend_input"
+            android:id="@+id/searchFriendInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -23,7 +23,7 @@
 
         <!-- 搜索按钮 -->
         <Button
-            android:id="@+id/btn_search_friend"
+            android:id="@+id/searchFriendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="搜索"
@@ -33,7 +33,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/friend_info_card"
+        android:id="@+id/searchResultArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

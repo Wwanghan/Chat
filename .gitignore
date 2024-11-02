@@ -17,3 +17,4 @@ app/release/
 .idea/migrations.xml
 modified:   .idea/gradle.xml
 gradle/wrapper/gradle-wrapper.properties
+specification.txt

@@ -23,26 +23,26 @@ import org.json.JSONObject;
 public class addFriendUi extends AppCompatActivity {
 
     private EditText searchFriendInput;
-    private Button btnSearchFriend;
+    private Button searchFriendBtn;
+    private LinearLayout searchResultArea;
 
     private Handler handler;
 
     private int UID;
     private String NAME;
 
-    private LinearLayout friendLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend_ui);
 
-        searchFriendInput = findViewById(R.id.search_friend_input);
-        btnSearchFriend = findViewById(R.id.btn_search_friend);
-        friendLayout = findViewById(R.id.friend_info_card);
+        searchFriendInput = findViewById(R.id.searchFriendInput);
+        searchFriendBtn = findViewById(R.id.searchFriendBtn);
+        searchResultArea = findViewById(R.id.searchResultArea);
 
-
-        btnSearchFriend.setOnClickListener(new View.OnClickListener() {
+        searchFriendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                获取输入框的内容，赋值给friendUid变量，之后还需判断这个变量是否为空
@@ -105,15 +105,15 @@ public class addFriendUi extends AppCompatActivity {
         Log.i("toad", "get_card: name = " + name + "uid = " + Uid);
 //        判断当前布局中的控件数量，如果大于0，表示输入框下方肯定有控件
 //        则删除当前所有控件，再生成新的控件
-        if (friendLayout.getChildCount() > 0){
-            friendLayout.removeAllViews();
+        if (searchResultArea.getChildCount() > 0){
+            searchResultArea.removeAllViews();
         }
 
-        friendLayout.setLayoutParams(new LinearLayout.LayoutParams(
+        searchResultArea.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 200 // 高度为 100dp
         ));
-        friendLayout.setOrientation(LinearLayout.HORIZONTAL);
+        searchResultArea.setOrientation(LinearLayout.HORIZONTAL);
 
         // 创建 ImageView
         ImageView avatar = new ImageView(this);
@@ -142,8 +142,8 @@ public class addFriendUi extends AppCompatActivity {
 
 
         // 将创建的控件添加到 LinearLayout 中
-        friendLayout.addView(avatar);
-        friendLayout.addView(friendName);
-        friendLayout.addView(addFriend_btn);
+        searchResultArea.addView(avatar);
+        searchResultArea.addView(friendName);
+        searchResultArea.addView(addFriend_btn);
     }
 }

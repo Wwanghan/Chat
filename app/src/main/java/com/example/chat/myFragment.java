@@ -1,6 +1,5 @@
 package com.example.chat;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,40 +29,27 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-
 public class
 myFragment extends Fragment {
+    // new一个我自己写的文件类
+    file_os fs = new file_os();
 
-    file_os fs = new file_os();  // new一个我自己写的文件类
-
-    String info_content;  // 用于存放读取的文件信息
+    // 用于存放读取的文件信息
+    String info_content;
     private View view;
-    Button wlan_connect_btn;
-    private Button to_settings;
-    private Button to_aboutMe;
-    private ImageButton toPersonalInformation;
+    private Button wlanConnectBtn;
+    private Button Settings;
+    private Button aboutMe;
+    private ImageButton personalInformation;
     private TextView userName;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView myAvatar;
@@ -81,19 +67,18 @@ myFragment extends Fragment {
           // UID暂时取消动态获取
 //        TextView uid = view.findViewById(R.id.UID);
 //        uid.setText(info_content);
+        // 导入自己封装的对话框
+        DialogUtils dialogUtils = new DialogUtils();
 
-        wlan_connect_btn = view.findViewById(R.id.WLAN_CONNECT_BTN);
-        to_settings = view.findViewById(R.id.Settings);
-        to_aboutMe = view.findViewById(R.id.aboutMe);
-        toPersonalInformation = view.findViewById(R.id.personalInformation);
+        wlanConnectBtn = view.findViewById(R.id.wlanConnectBtn);
+        Settings = view.findViewById(R.id.Settings);
+        aboutMe = view.findViewById(R.id.aboutMe);
+        personalInformation = view.findViewById(R.id.personalInformation);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         userName = view.findViewById(R.id.userName);
         myAvatar = view.findViewById(R.id.myAvatar);
 
         userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
-
-        // 导入自己封装的对话框
-        DialogUtils dialogUtils = new DialogUtils();
 
         // 获取本机IP地址并显示在页面上
         getIpAddress(getContext());
@@ -118,7 +103,7 @@ myFragment extends Fragment {
             Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(myAvatar);
         }
 
-        wlan_connect_btn.setOnClickListener(new View.OnClickListener() {
+        wlanConnectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 创建输入框
@@ -169,7 +154,7 @@ myFragment extends Fragment {
 
 
         // 去到设置页面
-        to_settings.setOnClickListener(new View.OnClickListener() {
+        Settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent_settings = new Intent(getActivity() , activity_settings.class);
@@ -179,7 +164,7 @@ myFragment extends Fragment {
         });
 
         // 去到关于我页面
-        to_aboutMe.setOnClickListener(new View.OnClickListener() {
+        aboutMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent_aboutMe = new Intent(getActivity() , activity_aboutMe.class);
@@ -188,7 +173,7 @@ myFragment extends Fragment {
         });
 
         // 去到个人信息页面
-        toPersonalInformation.setOnClickListener(new View.OnClickListener() {
+        personalInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent_personal_information = new Intent(getActivity() , personal_information.class);
