@@ -53,7 +53,6 @@ myFragment extends Fragment {
     private TextView userName;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ImageView myAvatar;
-
     private TextView chat;
     @Nullable
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
