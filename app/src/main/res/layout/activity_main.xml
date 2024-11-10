@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rg_group"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@drawable/top_navigation_bar"
+        >
+
+        <RadioButton
+            android:id="@+id/chat_nav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            style="@style/fragment"
+            android:drawableTop="@drawable/bottom_switch_chat"
+            android:text="聊天"
+            android:textSize="14dp"
+            />
+
+        <RadioButton
+            android:id="@+id/my_nav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            style="@style/fragment"
+            android:drawableTop="@drawable/bottom_switch_my"
+            android:textSize="14dp"
+            android:text="我的"
+            />
+    </RadioGroup>
+
+</RelativeLayout>

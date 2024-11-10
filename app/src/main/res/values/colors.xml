@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    themes-->
+    <color name="colorPrimaryDark">#BBC4C2</color>
+
+    <color name="pink_gradient">#FFE3E3</color>
+
+
+<!--    D1E9F6-->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="MY_BG">#7C93C3</color>
+    <color name="object_color">#F9B572</color>
+    <color name="green">#FF00FF00</color>
+    <color name="background_grey">#F5F5F5</color>
+    <color name="blue">#23A2DB</color>
+    <color name="gray">#BBC4C2</color>
+</resources>
