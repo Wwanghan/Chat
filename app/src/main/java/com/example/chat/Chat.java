@@ -482,8 +482,7 @@ public class Chat extends AppCompatActivity {
             // 限制消息按钮的最大宽度，防止内容过长时超出屏幕
             message_btn.setMaxWidth(getResources().getDisplayMetrics().widthPixels - 300); // 留出头像的宽度
             // 设置图片资源，动态获取头像
-            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyApp" , Context.MODE_PRIVATE);
-            String avatarUriString = sharedPreferences.getString("avatarUri", null);
+            String avatarUriString = SPDataUtils.getStorageInformation(getBaseContext() , "avatarUri");
             if (avatarUriString != null) {
                 Uri avatarUri = Uri.parse(avatarUriString);
                 try {

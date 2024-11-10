@@ -28,6 +28,7 @@ public class personal_information extends AppCompatActivity {
     private TextView userName;
     private TextView userIpAddress;
     private ImageView userAvatar;
+    private TextView myUid;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
 
     @Override
@@ -36,23 +37,24 @@ public class personal_information extends AppCompatActivity {
         setContentView(R.layout.activity_personal_information);
 
         DialogUtils dialogUtils = new DialogUtils();
-        file_os fs = new file_os();
 
         layoutName = findViewById(R.id.layoutName);
         exitPage = findViewById(R.id.exitPage);
         userName = findViewById(R.id.userName);
         userIpAddress = findViewById(R.id.userIpAddress);
         userAvatar = findViewById(R.id.userAvatar);
+        myUid = findViewById(R.id.myUid);
         // 设置头像透明背景
         userAvatar.setBackgroundColor(Color.TRANSPARENT);
 
+        myUid.setText("UID: " + ((dataHub) getApplication()).getUID());
         userName.setText(((dataHub) getApplication()).getName());
         userIpAddress.setText(((dataHub) getApplication()).getIpAddress());
 
         // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
         // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
-        SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
-        String avatarUriString = sharedPreferences.getString("avatarUri", null);
+        String avatarUriString = SPDataUtils.getStorageInformation(getBaseContext() , "avatarUri");
+        Log.i("toad", "onCreate: " + avatarUriString);
         if (avatarUriString != null) {
             Uri avatarUri = Uri.parse(avatarUriString);
             try {
@@ -77,8 +79,8 @@ public class personal_information extends AppCompatActivity {
                         (dialog, which) -> {
                             String newName = input.getText().toString();
                             userName.setText(newName);
+                            SPDataUtils.storageInformation(getBaseContext() , "userName" , newName);
                             ((dataHub) getApplication()).setName(newName);
-                            fs.updateConfig("chatConfig.conf" , "Name" , newName , getBaseContext());
                             Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
 
                         }
@@ -119,10 +121,7 @@ public class personal_information extends AppCompatActivity {
                         Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 // 将用户自己选择的头像，保存 Uri 到 SharedPreferences，方便下一次读取
-                SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("avatarUri", selectedImageUri.toString());
-                editor.apply();
+                SPDataUtils.storageInformation(getBaseContext() , "avatarUri" , selectedImageUri.toString());
 
                 // 显示图片
                 userAvatar.setImageURI(selectedImageUri);

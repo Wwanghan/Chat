@@ -2,24 +2,55 @@ package com.example.chat;
 
 import android.app.Application;
 import android.net.Uri;
+import android.os.Looper;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Handler;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class dataHub extends Application {
 
     private Socket Socket;
     private int Delay;  // AI流对话延迟
-    private String Name; // 保存用户名
+    private String UID; // 保存用户名
+    private String userName;
     private String targetName; // 保存对方的名字
     private String ipAddress;
 
-    private Uri myAvatar = null;
+    private String isLogin;
 
-    file_os fs = new file_os();
+    private Uri myAvatar = null;
+    myDatabase my_db = new myDatabase();
 
     public void getConfig(){
-        this.Delay = Integer.parseInt(fs.readConfig("chatConfig.conf" , "streamDelay" , getBaseContext()));
-        this.Name = fs.readConfig("chatConfig.conf" , "Name" , getBaseContext());
+        // 程序最开始运行时，先将一些默认值存储
+        // 这里使用变量 isFirst 判断用户是否是第一次打开App, 如果是, 那么会加载默认值，反之则不会
+        String isFirst = null;
+        isFirst = SPDataUtils.getStorageInformation(getBaseContext() , "isFirst");
+        if (isFirst == null){
+            SPDataUtils.storageInformation(getBaseContext() , "isFirst" , "true");
+            SPDataUtils.storageInformation(getBaseContext() , "userName" , "userNull");
+            SPDataUtils.storageInformation(getBaseContext() , "UID" , "uidNull");
+            SPDataUtils.storageInformation(getBaseContext() , "isLogin" , "false");
+            SPDataUtils.storageInformation(getBaseContext() , "streamDelay" , "50");
+        }
+
+        // 将默认值赋值，方便后面从这儿取数据
+        this.userName = SPDataUtils.getStorageInformation(getBaseContext() , "userName");
+        this.UID = SPDataUtils.getStorageInformation(getBaseContext() , "UID");
+        this.isLogin = SPDataUtils.getStorageInformation(getBaseContext() , "isLogin");
+        this.Delay = Integer.parseInt(SPDataUtils.getStorageInformation(getBaseContext() , "streamDelay"));
     }
 
 
@@ -34,8 +65,11 @@ public class dataHub extends Application {
     public void setDelay(int delay){ this.Delay = delay; }
     public int getDelay(){ return this.Delay; }
 
-    public void setName(String name){ this.Name = name; }
-    public String getName(){ return this.Name; }
+    public void setUID(String UID){ this.UID = UID; }
+    public String getUID(){ return this.UID; }
+
+    public void setName(String name){ this.userName = name; }
+    public String getName(){ return this.userName; }
 
     public void setTargetName(String targetName){ this.targetName = targetName; }
     public String getTargetName(){ return this.targetName; }
@@ -47,5 +81,6 @@ public class dataHub extends Application {
     public void setAvatar(Uri Avatar){ this.myAvatar = Avatar; }
     public Uri getAvatar(){ return this.myAvatar; }
 
-
+    public void setIsLogin(String islogin){ this.isLogin = islogin; }
+    public String getIsLogin(){ return this.isLogin; }
 }

@@ -21,14 +21,10 @@ public class activity_settings extends AppCompatActivity {
     private EditText editDelay;
     private ImageButton exitPage;
 
-    private file_os fs;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
-        fs = new file_os();
 
         editDelay = findViewById(R.id.editDelay);
         exitPage = findViewById(R.id.exitPage);
@@ -60,7 +56,7 @@ public class activity_settings extends AppCompatActivity {
         // 在用户退出当前页面后，先是判断用户有无修改内容，如果没有，那么不做任何事
         // 如果用户修改了数值，则将用户自定义修改的值更新到配置文件中去，并动态修改数据
         if (!editDelay.getText().toString().trim().isEmpty()){
-            fs.updateConfig("chatConfig.conf" , "streamDelay" , editDelay.getText().toString() , getBaseContext());
+            SPDataUtils.storageInformation(getBaseContext() , "streamDelay" , editDelay.getText().toString());
             ((dataHub) getApplication()).setDelay(Integer.parseInt(editDelay.getText().toString()));
         }
 

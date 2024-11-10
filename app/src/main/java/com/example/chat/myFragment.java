@@ -40,9 +40,6 @@ import java.util.List;
 
 public class
 myFragment extends Fragment {
-    // new一个我自己写的文件类
-    file_os fs = new file_os();
-
     // 用于存放读取的文件信息
     String info_content;
     private View view;
@@ -77,15 +74,27 @@ myFragment extends Fragment {
         userName = view.findViewById(R.id.userName);
         myAvatar = view.findViewById(R.id.myAvatar);
 
-        userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+        // 判断用户是否登录
+        if (((dataHub) getActivity().getApplication()).getIsLogin() == "true"){
+            userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+        }else {
+            userName.setText("请您注册/登录");
+
+            userName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent LAR_Page = new Intent(getActivity() , LAR_mainActivity.class);
+                    startActivity(LAR_Page);
+                }
+            });
+        }
 
         // 获取本机IP地址并显示在页面上
         getIpAddress(getContext());
 
         // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
         // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyApp", Context.MODE_PRIVATE);
-        String avatarUriString = sharedPreferences.getString("avatarUri", null);
+        String avatarUriString = SPDataUtils.getStorageInformation(getContext() , "avatarUri");
         if (avatarUriString != null) {
             Uri avatarUri = Uri.parse(avatarUriString);
             try {
@@ -343,9 +352,30 @@ myFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
-        myAvatar.setImageURI(((dataHub) getActivity().getApplication()).getAvatar());
-        Glide.with(this).load(((dataHub) getActivity().getApplication()).getAvatar()).circleCrop().into(myAvatar);
+        if (((dataHub) getActivity().getApplication()).getIsLogin() == "true"){
+            userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+        }else {
+            userName.setText("请您注册/登录");
+        }
+        
+        String avatarUriString = SPDataUtils.getStorageInformation(getContext() , "avatarUri");
+        if (avatarUriString != null) {
+            Uri avatarUri = Uri.parse(avatarUriString);
+            try {
+                ((dataHub) getActivity().getApplication()).setAvatar(avatarUri);
+                myAvatar.setImageURI(((dataHub) getActivity().getApplication()).getAvatar());
+                // 使用 Glide 加载图片并裁剪为圆形
+                Glide.with(this).load(((dataHub) getActivity().getApplication()).getAvatar()).circleCrop().into(myAvatar);
+            } catch (SecurityException e) {
+                Log.e("MainActivity", "Uri 权限失效: " + e.getMessage());
+            }
+        }else {
+            myAvatar.setImageResource(R.mipmap.mrtoad);
+            // 使用 Glide 加载图片并裁剪为圆形
+            Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(myAvatar);
+        }
+
+
         getIpAddress(getContext());
     }
 }

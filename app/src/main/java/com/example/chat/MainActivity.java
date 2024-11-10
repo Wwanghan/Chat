@@ -1,5 +1,6 @@
 package com.example.chat;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -14,6 +15,10 @@ import android.widget.ScrollView;
 import com.example.chat.R.id;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,21 +26,24 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private  chatFragment chatFragment;
     private  myFragment myFragment;
     private ServerSocket serverSocket;
 
-    private file_os fs;
+    // 加载自己封装的sql类，用于连接数据库进行操作
+    myDatabase myDb = new myDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 在app刚运行时，读取配置文件
-        fs = new file_os();
         ((dataHub) getApplication()).getConfig();
 
         chatFragment = new chatFragment();
