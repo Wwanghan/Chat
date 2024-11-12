@@ -22,6 +22,9 @@ android {
         // 获取千帆大模型所需要的密钥
         buildConfigField("String", "API_QIANFAN_AK", "\"${project.findProperty("QIANFAN_AK") as String}\"")
         buildConfigField("String", "API_QIANFAN_SK", "\"${project.findProperty("QIANFAN_SK") as String}\"")
+
+//        短信业务程序ID
+        buildConfigField("String", "BMOB_APPLICATION_KEY", "\"${project.findProperty("BMOB_APPLICATION_KEY") as String}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -62,5 +65,13 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
+    // 短信业务需要依赖的包
+    implementation("io.github.bmob:android-sdk:4.0.5")
+    implementation("io.reactivex.rxjava3:rxjava:3.1.9")
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation("com.squareup.okhttp3:okhttp:4.8.1")
+    implementation("com.squareup.okio:okio:2.2.2")
+    implementation("com.google.code.gson:gson:2.8.5")
 
 }

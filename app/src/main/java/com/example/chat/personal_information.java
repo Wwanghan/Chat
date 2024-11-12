@@ -82,7 +82,6 @@ public class personal_information extends AppCompatActivity {
                             SPDataUtils.storageInformation(getBaseContext() , "userName" , newName);
                             ((dataHub) getApplication()).setName(newName);
                             Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
-
                         }
                 );
             }

@@ -4,24 +4,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/white"
     android:padding="16dp">
 
     <EditText
         android:id="@+id/loginAccount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="账号" />
+        android:layout_height="40dp"
+        android:background="@drawable/input_style"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:hint="手机号" />
 
     <EditText
         android:id="@+id/loginPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="密码"
+        android:background="@drawable/input_style"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
         android:inputType="textPassword" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        style="@style/CustomButton"
+        android:background="@drawable/send_button_style"
         android:text="登录" />
 </LinearLayout>

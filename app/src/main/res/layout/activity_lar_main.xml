@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="16dp">
 
     <!-- TabLayout 用于切换 登录/注册 -->
@@ -12,13 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed"
-        app:tabGravity="fill" />
+        app:tabGravity="fill"
+        app:tabSelectedTextColor="@color/blue"
+        app:tabIndicatorColor="@color/blue"
+        android:background="@color/white"
+        />
 
     <!-- ViewPager2 用于显示 登录/注册 Fragment -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPaper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+
         android:layout_weight="1" />
 
 </LinearLayout>

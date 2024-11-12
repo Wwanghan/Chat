@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="30dp">
 
 <!--    暂时不做大的通信，先从小的内网通信做起

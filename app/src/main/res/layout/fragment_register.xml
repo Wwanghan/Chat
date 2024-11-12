@@ -4,30 +4,71 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@color/white"
     android:padding="16dp">
-
-    <EditText
-        android:id="@+id/registerUserName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="昵称" />
-
+<!--    手机号-->
     <EditText
         android:id="@+id/registerAccount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="账号" />
+        android:layout_height="40dp"
+        android:paddingLeft="5dp"
+        android:background="@drawable/input_style"
+        android:hint="手机号" />
 
+<!--    验证码+发送验证码-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        >
+        <EditText
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/input_style"
+            android:paddingLeft="5dp"
+            android:hint="验证码"
+            />
+
+        <Button
+            android:id="@+id/sendCodeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            style="@style/CustomButton"
+            android:background="@drawable/send_button_style"
+            android:text="发送验证码"/>
+    </LinearLayout>
+
+<!--    用户名-->
+    <EditText
+        android:id="@+id/registerUserName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/input_style"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:hint="用户名" />
+
+<!--    密码-->
     <EditText
         android:id="@+id/registerPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/input_style"
+        android:paddingLeft="5dp"
+        android:layout_marginTop="10dp"
         android:hint="密码"
         android:inputType="textPassword" />
 
+<!--    注册按钮-->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        style="@style/CustomButton"
+        android:background="@drawable/send_button_style"
         android:text="注册" />
 </LinearLayout>

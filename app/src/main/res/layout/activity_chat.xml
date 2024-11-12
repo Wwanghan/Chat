@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/shape_gradient"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <ImageButton
@@ -18,6 +18,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="5dp"
+            android:background="@color/white"
             android:src="@mipmap/left_exit"
             />
 
@@ -49,12 +50,11 @@
             android:id="@+id/chatMore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_gradient"
+            android:background="@color/white"
             android:src="@mipmap/more"
             android:layout_marginRight="15dp"
             android:layout_gravity="center_vertical"
             />
-
 
     </LinearLayout>
 
