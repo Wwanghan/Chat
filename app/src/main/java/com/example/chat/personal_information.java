@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import Utils.SPDataUtils;
+
 public class personal_information extends AppCompatActivity {
 
     private LinearLayout layoutName;
@@ -79,7 +81,7 @@ public class personal_information extends AppCompatActivity {
                         (dialog, which) -> {
                             String newName = input.getText().toString();
                             userName.setText(newName);
-                            SPDataUtils.storageInformation(getBaseContext() , "userName" , newName);
+                            Utils.SPDataUtils.storageInformation(getBaseContext() , "userName" , newName);
                             ((dataHub) getApplication()).setName(newName);
                             Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
                         }
@@ -120,8 +122,7 @@ public class personal_information extends AppCompatActivity {
                         Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
                 // 将用户自己选择的头像，保存 Uri 到 SharedPreferences，方便下一次读取
-                SPDataUtils.storageInformation(getBaseContext() , "avatarUri" , selectedImageUri.toString());
-
+                Utils.SPDataUtils.storageInformation(getBaseContext() , "avatarUri" , selectedImageUri.toString());
                 // 显示图片
                 userAvatar.setImageURI(selectedImageUri);
                 // 设置图片等比例缩放

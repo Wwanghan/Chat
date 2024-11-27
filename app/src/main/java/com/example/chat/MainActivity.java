@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
 import com.example.chat.R.id;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 import org.json.JSONArray;
@@ -25,7 +26,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
+import Utils.MyDatabaseUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -36,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private  myFragment myFragment;
     private ServerSocket serverSocket;
 
-    // 加载自己封装的sql类，用于连接数据库进行操作
-    myDatabase myDb = new myDatabase();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,32 +46,22 @@ public class MainActivity extends AppCompatActivity {
 
         ((dataHub) getApplication()).getConfig();
 
-        chatFragment = new chatFragment();
-        myFragment = new myFragment();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        RadioButton chatNav = findViewById(R.id.chat_nav);
-        chatNav.setChecked(true);
+        // 设置聊天页为默认页面
+        loadFragment(new chatFragment());
 
-        // 默认显示聊天 Fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, chatFragment).commit();
-
-        RadioGroup rgGroup = findViewById(R.id.rg_group);
-
-        rgGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            // 设置多个页面切换
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Fragment selectedFragment = null;
-                if (checkedId == id.chat_nav) {
-                    selectedFragment = chatFragment;
-                } else if (checkedId == id.my_nav) {
-                    selectedFragment = myFragment;
-                }
-                if (selectedFragment != null) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_layout, selectedFragment).commit();
-                }
+        // 设置 BottomNavigationView 的监听事件
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment fragment = null;
+            if (item.getItemId() == R.id.nav_frontPage) {
+                fragment = new chatFragment();
+            } else if (item.getItemId() == R.id.nav_my) {
+                fragment = new myFragment();
             }
+            return loadFragment(fragment);
         });
+
         // 启动 TCP 服务器
         new Thread(new Runnable() {
             @Override
@@ -102,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // 加载 Fragment
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_layout, fragment)
+                    .commit();
+            return true;
+        }
+        return false;
     }
 
     // 销毁 Activity 时关闭服务器

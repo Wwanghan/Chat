@@ -1,7 +1,18 @@
-package com.example.chat;
+package Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+//   _________________________________
+//   <  SPData = SharedPreferences Data
+//      通过 SharedPreferences 存储和读取数据
+//   >
+//   ---------------------------------
+//                     \   ^__^
+//                      \  (oo)\_______
+//                         (__)\       )\/\
+//                             ||----w |
+//                             ||     ||
 
 public class SPDataUtils {
     private static final String fileName = "myData";

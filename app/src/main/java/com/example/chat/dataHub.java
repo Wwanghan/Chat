@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Handler;
 
+import Utils.SPDataUtils;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -31,25 +32,24 @@ public class dataHub extends Application {
     private String isLogin;
 
     private Uri myAvatar = null;
-    myDatabase my_db = new myDatabase();
 
     public void getConfig(){
         // 程序最开始运行时，先将一些默认值存储
         // 这里使用变量 isFirst 判断用户是否是第一次打开App, 如果是, 那么会加载默认值，反之则不会
         String isFirst = null;
-        isFirst = SPDataUtils.getStorageInformation(getBaseContext() , "isFirst");
+        isFirst = Utils.SPDataUtils.getStorageInformation(getBaseContext() , "isFirst");
         if (isFirst == null){
-            SPDataUtils.storageInformation(getBaseContext() , "isFirst" , "true");
-            SPDataUtils.storageInformation(getBaseContext() , "userName" , "userNull");
-            SPDataUtils.storageInformation(getBaseContext() , "UID" , "uidNull");
-            SPDataUtils.storageInformation(getBaseContext() , "isLogin" , "false");
-            SPDataUtils.storageInformation(getBaseContext() , "streamDelay" , "50");
+            Utils.SPDataUtils.storageInformation(getBaseContext() , "isFirst" , "true");
+            Utils.SPDataUtils.storageInformation(getBaseContext() , "userName" , "userNull");
+            Utils.SPDataUtils.storageInformation(getBaseContext() , "UID" , "uidNull");
+            Utils.SPDataUtils.storageInformation(getBaseContext() , "isLogin" , "false");
+            Utils.SPDataUtils.storageInformation(getBaseContext() , "streamDelay" , "50");
         }
 
         // 将默认值赋值，方便后面从这儿取数据
-        this.userName = SPDataUtils.getStorageInformation(getBaseContext() , "userName");
-        this.UID = SPDataUtils.getStorageInformation(getBaseContext() , "UID");
-        this.isLogin = SPDataUtils.getStorageInformation(getBaseContext() , "isLogin");
+        this.userName = Utils.SPDataUtils.getStorageInformation(getBaseContext() , "userName");
+        this.UID = Utils.SPDataUtils.getStorageInformation(getBaseContext() , "UID");
+        this.isLogin = Utils.SPDataUtils.getStorageInformation(getBaseContext() , "isLogin");
         this.Delay = Integer.parseInt(SPDataUtils.getStorageInformation(getBaseContext() , "streamDelay"));
     }
 

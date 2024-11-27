@@ -23,27 +23,43 @@
         android:text="添加好友"/>
 -->
 
-    <RelativeLayout
-        android:layout_width="120dp"
-        android:layout_height="40sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp">
+<!--    <RelativeLayout-->
+<!--        android:layout_width="120dp"-->
+<!--        android:layout_height="40sp"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginBottom="10dp">-->
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/home_rounded_borders" />
+<!--        <ImageView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:background="@drawable/home_rounded_borders" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/BuddyList"-->
+<!--            android:textSize="24sp"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            android:gravity="center_horizontal" />-->
+<!--            &lt;!&ndash;    这个对齐有点脑瘫，所以加了3dp    &ndash;&gt;-->
+<!--    </RelativeLayout>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/BuddyList"
-            android:textSize="24sp"
-            android:layout_marginTop="3dp"
-            android:gravity="center_horizontal" />
-            <!--    这个对齐有点脑瘫，所以加了3dp    -->
-    </RelativeLayout>
+            android:text="@string/app_name"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
 
 
     <ScrollView
@@ -94,7 +110,6 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:background="#11FFFFFF"
                 />
 
         </LinearLayout>

@@ -11,13 +11,16 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class LAR_mainActivity extends AppCompatActivity {
 
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lar_main);
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager2 viewPager = findViewById(R.id.viewPaper);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPaper);
 
         // 直接在 MainActivity 中设置适配器
         viewPager.setAdapter(new FragmentStateAdapter(this) {
@@ -39,4 +42,12 @@ public class LAR_mainActivity extends AppCompatActivity {
             tab.setText(position == 0 ? "登录" : "注册");
         }).attach();
     }
+
+    public void switchToLoginFragment() {
+        if (viewPager != null) {
+            viewPager.setCurrentItem(0, true); // 设置 ViewPager2 当前页面为登录页面
+        }
+    }
+
+
 }

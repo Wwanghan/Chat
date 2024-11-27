@@ -12,7 +12,10 @@
     <color name="MY_BG">#7C93C3</color>
     <color name="object_color">#F9B572</color>
     <color name="green">#FF00FF00</color>
-    <color name="background_grey">#F5F5F5</color>
     <color name="blue">#23A2DB</color>
     <color name="gray">#BBC4C2</color>
+
+<!--    自定义颜色-->
+    <color name="background_grey">#ededed</color>
+    <color name="background_nav">#f7f7f7</color>
 </resources>

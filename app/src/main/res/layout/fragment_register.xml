@@ -8,7 +8,7 @@
     android:padding="16dp">
 <!--    手机号-->
     <EditText
-        android:id="@+id/registerAccount"
+        android:id="@+id/registerPhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft="5dp"
@@ -23,6 +23,7 @@
         android:layout_marginTop="10dp"
         >
         <EditText
+            android:id="@+id/verifyCode"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
@@ -32,7 +33,7 @@
             />
 
         <Button
-            android:id="@+id/sendCodeButton"
+            android:id="@+id/sendVerifyCodeButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"

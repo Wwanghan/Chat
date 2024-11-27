@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +50,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import Utils.SPDataUtils;
+
 public class Chat extends AppCompatActivity {
 
     private LinearLayout chatLayout;
@@ -58,7 +61,6 @@ public class Chat extends AppCompatActivity {
     private Button sendButton;
     private TextView showObject ;
     private ImageButton chatExit;
-    private ImageButton chatMore;
     private LinearLayout.LayoutParams scrollParams;
     private View rootView;
     private boolean isShowVirtualKeyBoard;
@@ -97,6 +99,10 @@ public class Chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
+
+        // 修改导航栏颜色
+        Window window = getWindow();
+        window.setNavigationBarColor(getResources().getColor(R.color.background_grey));
 
         socket = null;
         isShowVirtualKeyBoard = false;
@@ -152,7 +158,6 @@ public class Chat extends AppCompatActivity {
         sendButton = findViewById(R.id.sendButton);
         showObject = findViewById(R.id.showObject);
         chatExit = findViewById(R.id.chatExit);
-        chatMore = findViewById(R.id.chatMore);
         rootView = findViewById(R.id.rootView);
 
         showObject.setText(FN);
@@ -165,7 +170,6 @@ public class Chat extends AppCompatActivity {
 
         // 给退出和更多按钮设置透明背景
         chatExit.setBackgroundColor(Color.TRANSPARENT);
-        chatMore.setBackgroundColor(Color.TRANSPARENT);
 
         // 这里在用户刚进入聊天页面时，先手动将按钮设置为不可点击状态，背景设置为灰色
         // 因为下方检测输入框内容是当用户输入了任意内容或删除了任意内容才会触发

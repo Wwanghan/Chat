@@ -16,7 +16,7 @@ android {
         minSdk = 33
         targetSdk = 33
         versionCode = 1
-        versionName = "1.2.1"
+        versionName = "1.3.0"
         // 获取数据库密钥
         buildConfigField("String", "SQL_API_KEY", "\"${project.findProperty("SQL_API_KEY") as String}\"")
         // 获取千帆大模型所需要的密钥
@@ -44,8 +44,6 @@ android {
 
     packagingOptions {
         exclude("META-INF/DEPENDENCIES")
-
-
     }
 }
 
@@ -53,8 +51,8 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -70,7 +68,6 @@ dependencies {
     implementation("io.github.bmob:android-sdk:4.0.5")
     implementation("io.reactivex.rxjava3:rxjava:3.1.9")
     implementation("io.reactivex.rxjava3:rxandroid:3.0.2")
-    implementation("com.squareup.okhttp3:okhttp:4.8.1")
     implementation("com.squareup.okio:okio:2.2.2")
     implementation("com.google.code.gson:gson:2.8.5")
 

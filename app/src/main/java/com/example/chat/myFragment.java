@@ -29,6 +29,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -37,6 +38,11 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
+
+import Utils.SPDataUtils;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class
 myFragment extends Fragment {
@@ -75,11 +81,11 @@ myFragment extends Fragment {
         myAvatar = view.findViewById(R.id.myAvatar);
 
         // 判断用户是否登录
-        if (((dataHub) getActivity().getApplication()).getIsLogin() == "true"){
+        Log.i("toad", "onViewCreated: " + ((dataHub) getActivity().getApplication()).getIsLogin());
+        if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
             userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
         }else {
             userName.setText("请您注册/登录");
-
             userName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -94,7 +100,7 @@ myFragment extends Fragment {
 
         // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
         // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
-        String avatarUriString = SPDataUtils.getStorageInformation(getContext() , "avatarUri");
+        String avatarUriString = Utils.SPDataUtils.getStorageInformation(getContext() , "avatarUri");
         if (avatarUriString != null) {
             Uri avatarUri = Uri.parse(avatarUriString);
             try {
@@ -197,78 +203,7 @@ myFragment extends Fragment {
             }
         });
 
-        // 测试对数据库发送增删改查的请求，成功！
-        // 但现在暂时不使用数据库，暂时先将请求的代码保留
-//        test_db.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        myDatabase myDatabase = new myDatabase();
-//                        myDatabase.executeCommand("select * from user", "queryData", new Callback() {
-//                            @Override
-//                            public void onFailure(@NonNull Call call, @NonNull IOException e) {}
-//
-//                            @Override
-//                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-//                                if (response.isSuccessful()) {
-//                                    String responseBody = response.body().string();
-//                                    // 处理成功返回的结果
-//                                    Log.i("toad", "onResponse: " + responseBody);
-//                                }
-//                            }
-//                        });
-//                    }
-//                }).start();
-//            }
-//        });
-
-
     }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // UID暂时取消动态获取
-//        动态请求读写权限
-//        if (ContextCompat.checkSelfPermission(getActivity() , Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-//                ContextCompat.checkSelfPermission(getActivity() , Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.WRITE_EXTERNAL_STORAGE} , 1);
-//        }else {
-//            getUserUid();
-//        }
-
-    }
-    // UID暂时取消动态获取
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if (requestCode == 1) {
-//            // 检查请求结果是否包含读写权限
-//            if (grantResults.length > 0
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-//                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-//                // 用户同意了读写权限请求，执行文件操作
-//                getUserUid();
-//            } else {
-//                Log.i("toad", "onRequestPermissionsResult: no");
-//            }
-//        }
-//    }
-      // UID暂时取消动态获取
-//    public void getUserUid(){
-//        // 最开始先执行这儿的代码，使用readFromFile读取文件时，这个函数先会判断本地Download下到底有没有这个文件
-//        // 如果有，那么最后会返回文件内容，info_content就可以接收到文件中的数据。
-//        // 如果找不到要读的文件，则返回null，那么下面的if语句成立，于是先创建文件，再读取文件。
-//        info_content = fs.readFromFile("chat_personalInformation.txt" , getActivity());
-//        if (info_content == null){
-//            fs.writeToFile("chat_personalInformation.txt" , "10000" , getActivity());
-//            info_content = fs.readFromFile("chat_personalInformation.txt" , getActivity());
-//        }
-//    }
 
     private void refreshPage() {
         // 模拟数据刷新操作，300毫秒后结束刷新
@@ -352,12 +287,12 @@ myFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (((dataHub) getActivity().getApplication()).getIsLogin() == "true"){
+        if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
             userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
         }else {
             userName.setText("请您注册/登录");
         }
-        
+
         String avatarUriString = SPDataUtils.getStorageInformation(getContext() , "avatarUri");
         if (avatarUriString != null) {
             Uri avatarUri = Uri.parse(avatarUriString);
@@ -375,8 +310,6 @@ myFragment extends Fragment {
             Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(myAvatar);
         }
 
-
-        getIpAddress(getContext());
     }
 }
 

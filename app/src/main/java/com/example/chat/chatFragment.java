@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,11 @@ public class chatFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        // 修改导航栏颜色
+        Window window = getActivity().getWindow();
+        window.setNavigationBarColor(getResources().getColor(R.color.background_nav));
 
 //        ImageButton introduceBtn = view.findViewById(R.id.add_friend_ui);
 //        introduceBtn.setOnClickListener(new View.OnClickListener() {

@@ -36,7 +36,7 @@
             android:textSize="18dp"
             android:layout_marginLeft="30dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="60dp"
+            android:layout_marginRight="100dp"
             android:text="AI助手"
             android:layout_height="wrap_content"/>
 
@@ -46,15 +46,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/chatMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:src="@mipmap/more"
-            android:layout_marginRight="15dp"
-            android:layout_gravity="center_vertical"
-            />
+<!--        <ImageButton-->
+<!--            android:id="@+id/chatMore"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/white"-->
+<!--            android:src="@mipmap/more_icon"-->
+<!--            android:layout_marginRight="15dp"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            />-->
 
     </LinearLayout>
 
@@ -64,6 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:transcriptMode="alwaysScroll"
+        android:background="@color/background_grey"
         android:padding="8dp">
 
         <LinearLayout
