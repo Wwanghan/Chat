@@ -1,11 +1,17 @@
-一款使用原生Android开发的聊天软件，目前包含AI聊天，和基于TCP的内网之间的连接，内网连接通过IP地址，你和你的小伙伴需要
-在同一个内网下
+一款使用原生Android开发的聊天软件，目前包含AI聊天，和基于TCP的内网之间的连接。
+
+APP 目前最新效果图
+
+1. AI聊天效果：
 
 
 
-下面分别是AI聊天和内网聊天的演示视频
+<img src="./demo/xingluo_demo_1.jpg" height=600 />
 
 
 
-<img title="" src="./chatDemo.gif" alt="ChatDemo" width="486">
+2. 个人信息效果
 
+
+
+<img src="./demo/xingluo_demo_2.jpg" height=600 />
