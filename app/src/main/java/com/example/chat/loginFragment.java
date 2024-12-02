@@ -52,7 +52,6 @@ public class loginFragment extends Fragment {
                 MyDatabaseUtils.queryByPhoneNumber(loginAccount.getText().toString(), new MyDatabaseUtils.ResultCallback<ArrayList<String>>() {
                     @Override
                     public void onSuccess(ArrayList<String> result) {
-                        Log.i("toad", "onSuccess: " + "result = " + result);
                         // 判断手机号是否注册
                         if (result == null || result.isEmpty()){
                             getActivity().runOnUiThread(() -> {
@@ -70,10 +69,14 @@ public class loginFragment extends Fragment {
                             // 将数据上传到数据中心，用户注册完可以立马看到数据
                             ((dataHub) getActivity().getApplication()).setUID(result.get(0));
                             ((dataHub) getActivity().getApplication()).setName(result.get(1));
+                            ((dataHub) getActivity().getApplication()).setPhoneNumber(result.get(2));
+                            ((dataHub) getActivity().getApplication()).setCreate_time(result.get(6));
 
                             // 将用户信息保存在本地
                             SPDataUtils.storageInformation(getContext() , "UID" , result.get(0));
                             SPDataUtils.storageInformation(getContext() , "userName" , result.get(1));
+                            SPDataUtils.storageInformation(getContext() , "phoneNumber" , result.get(2));
+                            SPDataUtils.storageInformation(getContext() , "create_time" , result.get(6));
 
                             // 登陆成功后，清空上方输入框里的内容
                             loginAccount.setText("");

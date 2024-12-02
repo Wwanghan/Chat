@@ -22,15 +22,18 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import Utils.SPDataUtils;
+import Utils.ToastUtils;
 
 public class personal_information extends AppCompatActivity {
 
     private LinearLayout layoutName;
     private ImageButton exitPage;
     private TextView userName;
-    private TextView userIpAddress;
     private ImageView userAvatar;
     private TextView myUid;
+    private TextView createTime;
+    private TextView phoneNumber;
+    private Button buttonSignOut;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
 
     @Override
@@ -42,21 +45,24 @@ public class personal_information extends AppCompatActivity {
 
         layoutName = findViewById(R.id.layoutName);
         exitPage = findViewById(R.id.exitPage);
-        userName = findViewById(R.id.userName);
-        userIpAddress = findViewById(R.id.userIpAddress);
+        userName = findViewById(R.id.user_name);
         userAvatar = findViewById(R.id.userAvatar);
+        createTime = findViewById(R.id.create_time);
+        phoneNumber = findViewById(R.id.user_phone_number);
+        buttonSignOut = findViewById(R.id.button_sign_out);
         myUid = findViewById(R.id.myUid);
+
         // 设置头像透明背景
         userAvatar.setBackgroundColor(Color.TRANSPARENT);
 
         myUid.setText("UID: " + ((dataHub) getApplication()).getUID());
         userName.setText(((dataHub) getApplication()).getName());
-        userIpAddress.setText(((dataHub) getApplication()).getIpAddress());
+        phoneNumber.setText(((dataHub) getApplication()).getPhoneNumber());
+        createTime.setText(((dataHub) getApplication()).getCreate_time());
 
         // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
         // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
         String avatarUriString = SPDataUtils.getStorageInformation(getBaseContext() , "avatarUri");
-        Log.i("toad", "onCreate: " + avatarUriString);
         if (avatarUriString != null) {
             Uri avatarUri = Uri.parse(avatarUriString);
             try {
@@ -70,7 +76,9 @@ public class personal_information extends AppCompatActivity {
             Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(userAvatar);
         }
 
-
+        /**
+         * 用户自定义设置名字
+         */
         layoutName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +97,9 @@ public class personal_information extends AppCompatActivity {
             }
         });
 
-        // 用户点击按钮后，会调用本地相册，用户可以自己选择头像
+        /**
+         * 用户自定义设置头像
+         */
         userAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,16 +110,52 @@ public class personal_information extends AppCompatActivity {
             }
         });
 
-
-
         exitPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
+        /**
+         * 退出登陆
+         */
+        buttonSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 若果用户本就是未登陆，提示用户 “您未登陆，无需退出”
+                if (((dataHub) getApplication()).getIsLogin().equals("false")) {
+                    ToastUtils.showToast(getBaseContext() , "您未登陆，无需退出");
+                    return;
+                }
+
+                SPDataUtils.storageInformation(getBaseContext() , "isLogin" , "false");
+                SPDataUtils.storageInformation(getBaseContext() , "UID" , "uidNull");
+                SPDataUtils.storageInformation(getBaseContext() , "userName" , "userNull");
+                SPDataUtils.storageInformation(getBaseContext() , "phoneNumber" , "null");
+                SPDataUtils.storageInformation(getBaseContext() , "create_time" , "null");
+                ((dataHub) getApplication()).setIsLogin("false");
+                ((dataHub) getApplication()).setUID("uidNull");
+                ((dataHub) getApplication()).setName("userNull");
+                ((dataHub) getApplication()).setPhoneNumber("null");
+                ((dataHub) getApplication()).setCreate_time("null");
+                ToastUtils.showToast(getBaseContext() , "退出登陆成功！");
+                finish();
+            }
+        });
     }
 
+    /**
+     * 获取用户自定义的头像，并保存到 SharedPreferences 中
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -66,9 +66,6 @@ myFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-          // UID暂时取消动态获取
-//        TextView uid = view.findViewById(R.id.UID);
-//        uid.setText(info_content);
         // 导入自己封装的对话框
         DialogUtils dialogUtils = new DialogUtils();
 
@@ -80,23 +77,10 @@ myFragment extends Fragment {
         userName = view.findViewById(R.id.userName);
         myAvatar = view.findViewById(R.id.myAvatar);
 
-        // 判断用户是否登录
-        Log.i("toad", "onViewCreated: " + ((dataHub) getActivity().getApplication()).getIsLogin());
-        if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
-            userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
-        }else {
-            userName.setText("请您注册/登录");
-            userName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent LAR_Page = new Intent(getActivity() , LAR_mainActivity.class);
-                    startActivity(LAR_Page);
-                }
-            });
-        }
+        isUserLoggedIn();
 
         // 获取本机IP地址并显示在页面上
-        getIpAddress(getContext());
+//        getIpAddress(getContext());
 
         // 从 SharedPreferences 加载之前保存的头像，如果之前用户有修改过头像，那么可以直接读取并设置用户自定义选择的头像
         // 如果从 SharedPreferences 读取不到数据，那么表示用户没有自定义选择头像，则使用默认的青蛙头像
@@ -167,7 +151,9 @@ myFragment extends Fragment {
         });
 
 
-        // 去到设置页面
+        /**
+         * 去到设置页面
+         */
         Settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,7 +163,9 @@ myFragment extends Fragment {
             }
         });
 
-        // 去到关于我页面
+        /**
+         * 去到关于我页面
+         */
         aboutMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,7 +174,9 @@ myFragment extends Fragment {
             }
         });
 
-        // 去到个人信息页面
+        /**
+         * 去到个人信息页面
+         */
         personalInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,7 +185,9 @@ myFragment extends Fragment {
             }
         });
 
-        // 刷新页面，调用refreshPage获取最新数据
+        /**
+         * 刷新页面
+         */
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -203,6 +195,26 @@ myFragment extends Fragment {
             }
         });
 
+    }
+
+    /**
+     * 判断用户是否登录，未登录则提示用户注册登陆
+     * @return
+     */
+    private boolean isUserLoggedIn() {
+        if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
+            userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+        }else {
+            userName.setText("请您注册/登录");
+            userName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent LAR_Page = new Intent(getActivity() , LAR_mainActivity.class);
+                    startActivity(LAR_Page);
+                }
+            });
+        }
+        return true;
     }
 
     private void refreshPage() {
@@ -287,6 +299,7 @@ myFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        isUserLoggedIn();
         if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
             userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
         }else {

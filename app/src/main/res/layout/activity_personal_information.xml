@@ -52,7 +52,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_vertical"
@@ -61,7 +61,7 @@
             />
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16dp"
@@ -85,6 +85,33 @@
             />
     </LinearLayout>
 
+    <!-- 手机号 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:text="手机号"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:id="@+id/user_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40dp"
+            />
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,23 +122,44 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="65dp"
             android:layout_height="wrap_content"
-            android:text="IP"
+            android:text="注册时间"
             android:textSize="16dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             />
 
         <TextView
-            android:id="@+id/userIpAddress"
+            android:id="@+id/create_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="56dp"
+            android:layout_marginLeft="40dp"
             />
 
     </LinearLayout>
+
+    <!-- 退出登陆 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        >
+
+        <Button
+            android:id="@+id/button_sign_out"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="退出登陆"
+            style="@style/CustomButton"
+            android:background="@drawable/button_style_sign_out"
+            />
+
+    </LinearLayout>
+
 
 </LinearLayout>
