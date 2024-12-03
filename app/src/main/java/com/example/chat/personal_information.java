@@ -21,14 +21,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
+import Utils.MyDatabaseUtils;
 import Utils.SPDataUtils;
 import Utils.ToastUtils;
 
 public class personal_information extends AppCompatActivity {
 
-    private LinearLayout layoutName;
     private ImageButton exitPage;
     private TextView userName;
+    private ImageButton changeName;
     private ImageView userAvatar;
     private TextView myUid;
     private TextView createTime;
@@ -43,13 +46,13 @@ public class personal_information extends AppCompatActivity {
 
         DialogUtils dialogUtils = new DialogUtils();
 
-        layoutName = findViewById(R.id.layoutName);
         exitPage = findViewById(R.id.exitPage);
         userName = findViewById(R.id.user_name);
         userAvatar = findViewById(R.id.userAvatar);
         createTime = findViewById(R.id.create_time);
         phoneNumber = findViewById(R.id.user_phone_number);
         buttonSignOut = findViewById(R.id.button_sign_out);
+        changeName = findViewById(R.id.change_name);
         myUid = findViewById(R.id.myUid);
 
         // 设置头像透明背景
@@ -79,20 +82,48 @@ public class personal_information extends AppCompatActivity {
         /**
          * 用户自定义设置名字
          */
-        layoutName.setOnClickListener(new View.OnClickListener() {
+        changeName.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 // 创建输入框
                 EditText input = new EditText(personal_information.this);
                 // 调用封装好的 dialogUtils
                 dialogUtils.showDialog(personal_information.this, "input" , "请输入新名字", "确认" , input ,
-                        (dialog, which) -> {
-                            String newName = input.getText().toString();
-                            userName.setText(newName);
-                            Utils.SPDataUtils.storageInformation(getBaseContext() , "userName" , newName);
-                            ((dataHub) getApplication()).setName(newName);
-                            Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
+                    (dialog, which) -> {
+                        // 修改名字分为两种情况
+                        // 1. 用户为登陆，此时只是在本地保存新的名字
+                        // 2. 用户已经登陆，此时需要将最新的名字更新数据库保存
+                        if (((dataHub) getApplication()).getIsLogin().equals("true")){
+                            // 更新数据库，先在数据库中修改完成对应用户名，确保数据库已经修改完毕，等回调再在本地修改保存。
+                            // 防止先在本地修改后，数据库连接失败的情况
+                            MyDatabaseUtils.updateUserNameByUID((input.getText().toString()) , ((dataHub) getApplication()).getUID() , new MyDatabaseUtils.ResultCallback<ArrayList<String>>() {
+                                @Override
+                                public void onSuccess(ArrayList<String> result) {
+                                    runOnUiThread(() -> {
+                                        ((dataHub) getApplication()).setName(input.getText().toString());
+                                        SPDataUtils.storageInformation(getBaseContext() , "userName" , input.getText().toString());
+                                        userName.setText(input.getText().toString());
+                                        Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
+                                    });
+                                }
+
+                                @Override
+                                public void onFailure(Exception e) {
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(getBaseContext() , "名字修改失败，数据库连接失败" , Toast.LENGTH_SHORT).show();
+                                    });
+                                }
+                            });
+
+                        } else {
+                            // 用户未登陆的情况只修改本地，不涉及数据库操作
+                            ((dataHub) getApplication()).setName(input.getText().toString());
+                            SPDataUtils.storageInformation(getBaseContext() , "userName" , input.getText().toString());
+                            userName.setText(input.getText().toString());
+                            Toast.makeText(getBaseContext() , "名字修改成功 本地" , Toast.LENGTH_SHORT).show();
                         }
+
+                    }
                 );
             }
         });

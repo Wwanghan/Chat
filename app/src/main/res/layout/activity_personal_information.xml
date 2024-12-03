@@ -44,7 +44,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layoutName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
@@ -76,11 +75,13 @@
             />
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/change_name"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@mipmap/right_arrow"
             android:background="@color/white"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="15dp"
+
             android:layout_gravity="center_vertical"
             />
     </LinearLayout>

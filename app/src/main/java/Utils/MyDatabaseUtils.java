@@ -32,6 +32,7 @@ public class MyDatabaseUtils {
 
     private static ArrayList<String> queryDataByPhoneNumber = new ArrayList<>();
 
+
     /**
      * 用于执行 sql 命令
      * @param command 传递一个 sql 命令
@@ -52,6 +53,11 @@ public class MyDatabaseUtils {
         client.newCall(request).enqueue(callback);
     }
 
+    /**
+     * 查询数据库，根据手机号查询用户信息
+     * @param phoneNumber
+     * @param callback
+     */
     public static void queryByPhoneNumber(String phoneNumber, ResultCallback<ArrayList<String>> callback) {
         ArrayList<String> queryDataByPhoneNumber = new ArrayList<>();
 
@@ -87,6 +93,27 @@ public class MyDatabaseUtils {
                 }
             }
         });
+    }
+
+    public static void updateUserNameByUID(String userName , String UID , ResultCallback<ArrayList<String>> callback){
+        String command = String.format("UPDATE user SET userName = '%s' WHERE UID = '%s'", userName , UID);
+        String status = "change";
+
+        executeCommand(command, status, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                callback.onFailure(e); // 通知回调请求失败
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                ArrayList<String> Success = new ArrayList<>();
+                Success.add("updateUserNameByUID Success");
+                callback.onSuccess(Success);
+            }
+        });
+
     }
 
     // 定义回调接口
