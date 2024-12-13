@@ -3,17 +3,13 @@ package com.example.chat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputType;
 import android.text.SpannableString;
-import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
+
 
 import Utils.SPDataUtils;
 

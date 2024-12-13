@@ -24,8 +24,6 @@ import Animations.ViewTransitionAnimator;
 
 public class chatFragment extends Fragment {
 
-    private View view;
-    private TextView chat;
     private EditText searchAnything;
     private ScrollView friendList;
     private TextView cancelSearch;

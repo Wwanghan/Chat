@@ -46,9 +46,6 @@
             android:name=".activity_settings"
             android:exported="false" />
         <activity
-            android:name=".addFriendUi"
-            android:exported="false" />
-        <activity
             android:name=".introduce"
             android:exported="false" />
         <activity

@@ -14,17 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Constants.MessageConstants;
 import Utils.BmobUtils;
 import Utils.MyDatabaseUtils;
 import Utils.SHA256Utils;
 import Utils.ToastUtils;
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobSMS;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -70,13 +68,13 @@ public class registerFragment extends Fragment {
             public void onClick(View v) {
                 // 判断手机号是否为空
                 if (registerPhoneNumber.getText().toString().isEmpty()){
-                    ToastUtils.showToast(getContext() , "手机号不能为空");
+                    ToastUtils.showToast(getContext() , MessageConstants.PHONE_NUMBER_CANNOT_BE_EMPTY);
                     return;
                 }
 
                 // 判断手机号是否是一个合法的手机号
                 if (!BmobUtils.isValidPhoneNumber(registerPhoneNumber.getText().toString())){
-                    ToastUtils.showToast(getContext() , "请输入一个合法的手机号");
+                    ToastUtils.showToast(getContext() , MessageConstants.PLEASE_ENTER_VALID_PHONE_NUMBER);
                     return;
                 }
 
@@ -120,7 +118,7 @@ public class registerFragment extends Fragment {
                     public void onSuccess(ArrayList<String> result) {
                         if (!(result == null || result.isEmpty())){
                             getActivity().runOnUiThread(() -> {
-                                ToastUtils.showToast(getContext() , "该手机号已注册！注册失败！");
+                                ToastUtils.showToast(getContext() , MessageConstants.PHONE_NUMBER_IS_ALREADY_REGISTERED);
                             });
                             return;
                         }
@@ -128,7 +126,7 @@ public class registerFragment extends Fragment {
                         // 判断手机号是否合法
                         if (!BmobUtils.isValidPhoneNumber(registerPhoneNumber.getText().toString())){
                             getActivity().runOnUiThread(() -> {
-                                ToastUtils.showToast(getContext() , "请输入一个合法的手机号！");
+                                ToastUtils.showToast(getContext() , MessageConstants.PLEASE_ENTER_VALID_PHONE_NUMBER);
                             });
                             return;
                         }
@@ -136,14 +134,14 @@ public class registerFragment extends Fragment {
                         // 判断用户是否输入验证码
                         if (verifyCode.getText().toString().isEmpty()){
                             getActivity().runOnUiThread(() -> {
-                                ToastUtils.showToast(getContext() , "验证码不能为空！");
+                                ToastUtils.showToast(getContext() , MessageConstants.CODE_CANNOT_BE_EMPTY);
                             });
                             return;
                         }
                         // 判断用户是否输入了手机号，用户名，密码，信息不能有空
                         if (registerPhoneNumber.getText().toString().isEmpty() || registerUserName.getText().toString().isEmpty()|| registerPassword.getText().toString().isEmpty()){
                             getActivity().runOnUiThread(() -> {
-                                ToastUtils.showToast(getContext() , "信息不能有空！");
+                                ToastUtils.showToast(getContext() , MessageConstants.INPUT_CANNOT_EMPTY);
                             });
                             return;
                         }
@@ -162,7 +160,7 @@ public class registerFragment extends Fragment {
                                         Activity activity = getActivity();
                                         if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
                                             activity.runOnUiThread(() -> {
-                                                ToastUtils.showToast(activity , "注册失败，请求数据库异常！");
+                                                ToastUtils.showToast(activity , MessageConstants.DATABASE_CONNECTION_FAILED);
                                             });
                                         }
                                     }
@@ -185,7 +183,7 @@ public class registerFragment extends Fragment {
                                                 }
 
                                                 getActivity().runOnUiThread(() -> {
-                                                    ToastUtils.showToast(activity , "注册成功！");
+                                                    ToastUtils.showToast(activity , MessageConstants.REGISTER_SUCCESS);
                                                 });
                                             });
                                         }
@@ -197,7 +195,7 @@ public class registerFragment extends Fragment {
                             public void onFailure(String errorMessage) {
                                 // 短信验证失败
                                 getActivity().runOnUiThread(() -> {
-                                    ToastUtils.showToast(getContext() , "短信验证失败");
+                                    ToastUtils.showToast(getContext() , MessageConstants.CODE_ERROR);
                                 });
                             }
                         });
@@ -207,7 +205,7 @@ public class registerFragment extends Fragment {
                     @Override
                     public void onFailure(Exception e) {
                         getActivity().runOnUiThread(() -> {
-                            ToastUtils.showToast(getContext() , "数据库连接失败");
+                            ToastUtils.showToast(getContext() , MessageConstants.DATABASE_CONNECTION_FAILED);
                         });
                     }
                 });

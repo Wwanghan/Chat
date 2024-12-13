@@ -2,7 +2,6 @@ package com.example.chat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -18,9 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +26,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -39,10 +35,9 @@ import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 
+import Constants.MessageConstants;
 import Utils.SPDataUtils;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import Utils.ToastUtils;
 
 public class
 myFragment extends Fragment {
@@ -122,7 +117,7 @@ myFragment extends Fragment {
                                 ((dataHub) getActivity().getApplication()).setSocket(socket);
                                 getActivity().runOnUiThread(() -> {
                                     // 连接成功后跳转到聊天页面
-                                    Toast.makeText(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort, Toast.LENGTH_SHORT).show();
+                                    ToastUtils.showToast(getActivity(), "已连接到服务器 : " + serverAddress + ":" + serverPort);
                                     Intent intent = new Intent(getActivity(), Chat.class);
                                     startActivity(intent);
                                     getActivity().finish();
@@ -130,21 +125,21 @@ myFragment extends Fragment {
                             } catch (UnknownHostException e){
                                 // 处理无法解析IP地址的情况
                                 getActivity().runOnUiThread(() ->
-                                        Toast.makeText(getActivity(), "无效的IP地址: " + serverAddress, Toast.LENGTH_SHORT).show()
+                                        ToastUtils.showToast(getActivity(), "无效的IP地址: " + serverAddress)
                                 );
                             } catch (SocketTimeoutException e){
                                 // 处理连接超时的情况
                                 getActivity().runOnUiThread(() ->
-                                        Toast.makeText(getActivity(), "连接超时，请检查IP地址和网络。", Toast.LENGTH_SHORT).show()
+                                        ToastUtils.showToast(getActivity(), "连接超时，请检查IP地址和网络")
                                 );
                             }
                             catch (Exception e) {
-                                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), "连接失败: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                getActivity().runOnUiThread(() -> ToastUtils.showToast(getActivity(), "连接失败: " + e.getMessage()));
                             }
                         }).start();
                     } else {
                         // 输入框为空时显示提示
-                        Toast.makeText(getActivity(), "输入框不能为空", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showToast(getActivity(), MessageConstants.INPUT_CANNOT_EMPTY);
                     }
                 });
             }

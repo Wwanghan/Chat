@@ -2,7 +2,6 @@ package com.example.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,7 +17,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -29,12 +27,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ScrollView;
 
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.baidubce.qianfan.Qianfan;
 import com.baidubce.qianfan.core.auth.Auth;
@@ -42,16 +38,15 @@ import com.baidubce.qianfan.model.chat.ChatResponse;
 import com.bumptech.glide.Glide;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import Constants.MessageConstants;
 import Utils.SPDataUtils;
+import Utils.ToastUtils;
 
 public class Chat extends AppCompatActivity {
 
@@ -559,7 +554,7 @@ public class Chat extends AppCompatActivity {
         if (socket != null){
             try {
                 socket.close();
-                Toast.makeText(this, "已断开连接！", Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(this, MessageConstants.DISCONNECTED);
             } catch (IOException e) {
                 e.printStackTrace();
             }

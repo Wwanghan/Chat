@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,14 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import Constants.MessageConstants;
 import Utils.MyDatabaseUtils;
 import Utils.SPDataUtils;
 import Utils.ToastUtils;
@@ -103,14 +101,14 @@ public class personal_information extends AppCompatActivity {
                                         ((dataHub) getApplication()).setName(input.getText().toString());
                                         SPDataUtils.storageInformation(getBaseContext() , "userName" , input.getText().toString());
                                         userName.setText(input.getText().toString());
-                                        Toast.makeText(getBaseContext() , "名字修改成功" , Toast.LENGTH_SHORT).show();
+                                        ToastUtils.showToast(getBaseContext() , MessageConstants.NAME_CHANGE_SUCCESS);
                                     });
                                 }
 
                                 @Override
                                 public void onFailure(Exception e) {
                                     runOnUiThread(() -> {
-                                        Toast.makeText(getBaseContext() , "名字修改失败，数据库连接失败" , Toast.LENGTH_SHORT).show();
+                                        ToastUtils.showToast(getBaseContext() , MessageConstants.DATABASE_CONNECTION_FAILED);
                                     });
                                 }
                             });
@@ -120,7 +118,7 @@ public class personal_information extends AppCompatActivity {
                             ((dataHub) getApplication()).setName(input.getText().toString());
                             SPDataUtils.storageInformation(getBaseContext() , "userName" , input.getText().toString());
                             userName.setText(input.getText().toString());
-                            Toast.makeText(getBaseContext() , "名字修改成功 本地" , Toast.LENGTH_SHORT).show();
+                            ToastUtils.showToast(getBaseContext() , MessageConstants.NAME_CHANGE_SUCCESS);
                         }
 
                     }
@@ -156,7 +154,7 @@ public class personal_information extends AppCompatActivity {
             public void onClick(View view) {
                 // 若果用户本就是未登陆，提示用户 “您未登陆，无需退出”
                 if (((dataHub) getApplication()).getIsLogin().equals("false")) {
-                    ToastUtils.showToast(getBaseContext() , "您未登陆，无需退出");
+                    ToastUtils.showToast(getBaseContext() , MessageConstants.NO_NEED_TO_QUIT);
                     return;
                 }
 
@@ -170,7 +168,7 @@ public class personal_information extends AppCompatActivity {
                 ((dataHub) getApplication()).setName("userNull");
                 ((dataHub) getApplication()).setPhoneNumber("null");
                 ((dataHub) getApplication()).setCreate_time("null");
-                ToastUtils.showToast(getBaseContext() , "退出登陆成功！");
+                ToastUtils.showToast(getBaseContext() , MessageConstants.LOGOUT_SUCCESS);
                 finish();
             }
         });

@@ -71,4 +71,7 @@ dependencies {
     implementation("com.squareup.okio:okio:2.2.2")
     implementation("com.google.code.gson:gson:2.8.5")
 
+    // 对话框依赖
+    implementation("com.afollestad.material-dialogs:core:0.9.6.0")
+
 }

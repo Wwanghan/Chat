@@ -1,4 +1,4 @@
-package com.example.chat;// LoginFragment.java
+package com.example.chat;
 import android.app.Activity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import Constants.MessageConstants;
 import Utils.BmobUtils;
 import Utils.MyDatabaseUtils;
 import Utils.SHA256Utils;
@@ -26,26 +26,31 @@ public class loginFragment extends Fragment {
 
     private static final Logger log = LoggerFactory.getLogger(loginFragment.class);
 
+    private EditText loginAccount;
+    private EditText loginPassword;
+    private Button loginButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        EditText loginAccount = view.findViewById(R.id.loginAccount);
-        EditText loginPassword = view.findViewById(R.id.loginPassword);
-        Button loginButton = view.findViewById(R.id.loginButton);
+        loginAccount = view.findViewById(R.id.loginAccount);
+        loginPassword = view.findViewById(R.id.loginPassword);
+        loginButton = view.findViewById(R.id.loginButton);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 判断输入框是否有空
                 if (loginAccount.getText().toString().isEmpty() || loginPassword.getText().toString().isEmpty()){
-                    ToastUtils.showToast(getContext() , "输入框不能有空");
+                    ToastUtils.showToast(getContext() , MessageConstants.INPUT_CANNOT_EMPTY);
                     return;
                 }
 
                 // 判断手机号是否合法
                 if (!BmobUtils.isValidPhoneNumber(loginAccount.getText().toString())){
-                    ToastUtils.showToast(getContext() , "请输入一个合法的手机号");
+                    ToastUtils.showToast(getContext() , MessageConstants.PLEASE_ENTER_VALID_PHONE_NUMBER);
+                    loginAccount.setText("");
                     return;
                 }
 
@@ -55,7 +60,8 @@ public class loginFragment extends Fragment {
                         // 判断手机号是否注册
                         if (result == null || result.isEmpty()){
                             getActivity().runOnUiThread(() -> {
-                                ToastUtils.showToast(getContext() , "该手机号未注册");
+                                ToastUtils.showToast(getContext() , MessageConstants.PHONE_NUMBER_IS_NOT_REGISTERED);
+                                loginAccount.setText("");
                             });
                             return;
                         }
@@ -86,11 +92,12 @@ public class loginFragment extends Fragment {
                             requireActivity().setResult(Activity.RESULT_OK);
                             requireActivity().finish(); // 关闭当前 Activity
 
-                            getActivity().runOnUiThread(() -> {ToastUtils.showToast(getContext() , "登陆成功！");});
+                            getActivity().runOnUiThread(() -> {ToastUtils.showToast(getContext() , MessageConstants.LOGIN_SUCCESS);});
 
 
                         }else {
-                            getActivity().runOnUiThread(() -> {ToastUtils.showToast(getContext() , "密码错误");});
+                            getActivity().runOnUiThread(() -> {ToastUtils.showToast(getContext() , MessageConstants.PASSWORD_ERROR);});
+                            loginPassword.setText("");
                         }
                     }
 
