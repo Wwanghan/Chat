@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -85,11 +86,12 @@ public class personal_information extends AppCompatActivity {
             public void onClick(View v) {
                 // 创建输入框
                 EditText input = new EditText(personal_information.this);
+                input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
                 // 调用封装好的 dialogUtils
                 dialogUtils.showDialog(personal_information.this, "input" , "请输入新名字", "确认" , input ,
                     (dialog, which) -> {
                         // 修改名字分为两种情况
-                        // 1. 用户为登陆，此时只是在本地保存新的名字
+                        // 1. 用户未登陆，此时只是在本地保存新的名字
                         // 2. 用户已经登陆，此时需要将最新的名字更新数据库保存
                         if (((dataHub) getApplication()).getIsLogin().equals("true")){
                             // 更新数据库，先在数据库中修改完成对应用户名，确保数据库已经修改完毕，等回调再在本地修改保存。

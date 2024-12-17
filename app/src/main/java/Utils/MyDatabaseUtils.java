@@ -66,7 +66,6 @@ public class MyDatabaseUtils {
         executeCommand(command, status, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
                 callback.onFailure(e); // 通知回调请求失败
             }
 
@@ -102,7 +101,6 @@ public class MyDatabaseUtils {
         executeCommand(command, status, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
                 callback.onFailure(e); // 通知回调请求失败
             }
 
@@ -114,6 +112,35 @@ public class MyDatabaseUtils {
             }
         });
 
+    }
+
+    // 判断用户名是否重复
+    public static void checkUserNameExists(String userName, ResultCallback<Boolean> callback) {
+        String command = String.format("SELECT COUNT(*) AS result FROM user WHERE userName = '%s'", userName);
+        String status = "query";
+
+        executeCommand(command, status, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure(e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String responseBody = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(responseBody);
+                    JSONArray queryData = jsonObject.getJSONArray("data");
+                    JSONArray resultData = queryData.getJSONArray(0);
+                    int result = resultData.getInt(0);
+                    boolean exists = result > 0;
+                    callback.onSuccess(exists);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    callback.onFailure(e);
+                }
+            }
+        });
     }
 
     // 定义回调接口

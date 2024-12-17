@@ -18,4 +18,6 @@
 <!--    自定义颜色-->
     <color name="background_grey">#ededed</color>
     <color name="background_nav">#f7f7f7</color>
+    <color name="red">#ff0000</color>
+    <color name="myBlue">#0F67B1</color>
 </resources>

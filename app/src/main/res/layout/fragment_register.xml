@@ -7,13 +7,29 @@
     android:background="@color/white"
     android:padding="16dp">
 <!--    手机号-->
-    <EditText
-        android:id="@+id/registerPhoneNumber"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingLeft="5dp"
-        android:background="@drawable/input_style"
-        android:hint="手机号" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <EditText
+            android:id="@+id/registerPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/input_style"
+            android:hint="手机号" />
+
+        <TextView
+            android:id="@+id/phone_number_error_register"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            />
+
+    </LinearLayout>
 
 <!--    验证码+发送验证码-->
     <LinearLayout
@@ -43,14 +59,30 @@
     </LinearLayout>
 
 <!--    用户名-->
-    <EditText
-        android:id="@+id/registerUserName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/input_style"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="5dp"
-        android:hint="用户名" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <EditText
+            android:id="@+id/registerUserName"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/input_style"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:hint="用户名" />
+
+        <TextView
+            android:id="@+id/user_name_error"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            />
+
+    </LinearLayout>
 
 <!--    密码-->
     <EditText

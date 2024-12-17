@@ -49,10 +49,13 @@
 
         <TextView
             android:id="@+id/cancel_search"
+            android:visibility="gone"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/myBlue"
             android:text="取消"
-            android:visibility="gone"
             />
 
     </LinearLayout>
