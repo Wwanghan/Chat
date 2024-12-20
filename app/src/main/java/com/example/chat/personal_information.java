@@ -78,6 +78,7 @@ public class personal_information extends AppCompatActivity {
             Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(userAvatar);
         }
 
+        // TODO 后面在修改用户名时，需要判断用户名是否合法，不合法则提示用户。现在累了，后面有空再改
         /**
          * 用户自定义设置名字
          */

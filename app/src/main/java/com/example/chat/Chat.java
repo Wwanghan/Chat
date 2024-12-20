@@ -1,10 +1,13 @@
 package com.example.chat;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +24,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +48,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 import Constants.MessageConstants;
 import Utils.SPDataUtils;
@@ -84,6 +90,7 @@ public class Chat extends AppCompatActivity {
             if (msg.what == 0){
                 showObject.setText(FN);
                 String aiRespContent = (String) msg.obj;
+                cancelHintLayer(chatLayout);
                 addMessage(aiRespContent , FN);
                 scrollToBottom();
             }
@@ -113,8 +120,8 @@ public class Chat extends AppCompatActivity {
             socket = ((dataHub) getApplication()).getSocket();
             if (socket != null && socket.isConnected()) {
                 try {
-                    input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                    output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+                    input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+                    output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
 
                     new Thread(new Runnable() {
                         @Override
@@ -173,6 +180,10 @@ public class Chat extends AppCompatActivity {
         // 用户刚进入聊天页面，输入框自然为空，而刚进入页面不会触发下面的检测事件，所以要先手动将按钮设置为不可点击状态，并且背景设置为灰色
         sendButton.setEnabled(false);
         sendButton.setBackgroundResource(R.drawable.send_button_unenabled);
+
+        /**
+         * 监听输入框内容变化
+         */
         messageInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -266,7 +277,9 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-        // 监听用户是否点击了聊天窗口中的空白处，如果是，则隐藏用户键盘
+        /**
+         * 监听用户是否点击了聊天窗口中的空白处，如果是，则隐藏用户键盘
+         */
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -280,6 +293,9 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+        /**
+         * 点击发送按钮，发送信息
+         */
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -310,6 +326,9 @@ public class Chat extends AppCompatActivity {
                             }
                         }).start();
                         showObject.setText("发送成功，请等待AI回复...");
+                        messageInput.setEnabled(false);
+                        messageInput.setBackgroundResource(R.drawable.input_disable);
+                        messageInput.setHint("请耐心等AI说完...");
 
                         // 如果是通过内网连接成功的双方，FN标志会是tmp_connect,会进入这个if
                     } else {
@@ -350,7 +369,9 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-    // 接收服务器的消息
+    /**
+     * 接收服务器信息
+     */
     private void receiveMessages() {
         String message;
         try {
@@ -392,7 +413,11 @@ public class Chat extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * 调用大模型接口，获取回复
+     * @param message 用户输入的信息
+     * @return 模型回复结果
+     */
     private String GetQianFanResponse(String message) {
         // 调用文心一言接口
         ChatResponse response = qianfan.chatCompletion()
@@ -403,7 +428,10 @@ public class Chat extends AppCompatActivity {
         return response.getResult();
     }
 
-    // 在聊天界面添加一条动态添加一条消息
+    /**
+     * 在聊天界面里面动态添加一条信息
+     */
+    @SuppressLint("RtlHardcoded")
     private void addMessage(String message , String identify) {
         // 首先，创建一个 LinearLayout 来包含文本和 ImageButton
         LinearLayout linearLayout = new LinearLayout(this);
@@ -466,6 +494,12 @@ public class Chat extends AppCompatActivity {
                         int tmp_height = message_btnHeight;
                         // 循环生成内容
                         message_btn.setText(message.substring(0, index + 1));
+
+                        if (index + 1 == message.length()){
+                            messageInput.setEnabled(true);
+                            messageInput.setBackgroundResource(R.drawable.input_style);
+                            messageInput.setHint("请输入信息");
+                        }
                     }
                 }, i * delay);  // 延迟显示每个字符
             }
@@ -510,7 +544,7 @@ public class Chat extends AppCompatActivity {
             // 将整个 LinearLayout 右对齐
             linearLayout.setGravity(Gravity.RIGHT);
             message_btn.setBackgroundResource(R.drawable.button_shape_my);
-            message_btn.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+            message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             linearLayout.addView(message_btn);
             linearLayout.addView(avatar);
         } else {
@@ -526,25 +560,134 @@ public class Chat extends AppCompatActivity {
                 message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL); // 设置文本左对齐
                 message_btn.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START); // 设置文本从视图的开始位置对齐
             } else {
-            //  这里设置对方的头像，目前还没用到服务器，所以对方头像默认小青蛙，后面将数据库搭建好后，从数据库获取用户头像
+                //  这里设置对方的头像，目前还没用到服务器，所以对方头像默认小青蛙，后面将数据库搭建好后，从数据库获取用户头像
                 targetAvatar = BitmapFactory.decodeResource(getResources() , R.mipmap.mrtoad);
                 avatar.setImageBitmap(targetAvatar);
                 Glide.with(this).load(targetAvatar).circleCrop().into(avatar);
-                message_btn.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             }
 
             linearLayout.addView(avatar);
             linearLayout.addView(message_btn);
         }
-
         chatLayout.addView(linearLayout);
+        // 如果是用户发送的消息，并且发送对象是AI，则添加一个占位层，
+        if (FN.equals("AI助手") && identify.equals("My")){
+            AIHintLayer(chatLayout);
+        }
+        if (identify.equals("My")){
+            chatAnimationIn(linearLayout);
+        }
         scrollToBottom();
     }
 
-
+    /**
+     * 聊天界面滚动到底部
+     */
     private void scrollToBottom() {
         // 将输入框和按钮固定在最底下
         scrollView.post(() -> scrollView.fullScroll(ScrollView.FOCUS_DOWN));
+    }
+
+    /**
+     * 增加一个AI占位层
+     * @param chatLayout
+     */
+    private void AIHintLayer(LinearLayout chatLayout) {
+        // 帮我new一个LinearLayout 来占位
+        LinearLayout aiHintLayer = new LinearLayout(this);
+        aiHintLayer.setOrientation(LinearLayout.HORIZONTAL);
+        aiHintLayer.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                200
+        ));
+
+        // 设置 ImageButton 的大小（确保图片不大）
+        LinearLayout.LayoutParams imageButtonParams = new LinearLayout.LayoutParams(
+                200, // 宽度，单位为像素，100px 只是示例，你可以根据需要调整
+                200  // 高度，单位为像素
+        );
+        imageButtonParams.setMargins(0, -30, 0, 0);  // 设置左边距，以便与文本有间隔
+
+        ImageButton ai_avatar_hint = new ImageButton(this);
+        ai_avatar_hint.setImageResource(R.drawable.ai);
+        ai_avatar_hint.setLayoutParams(imageButtonParams);
+        // 设置图片等比例缩放
+        ai_avatar_hint.setScaleType(ImageButton.ScaleType.FIT_CENTER);
+        ai_avatar_hint.setAdjustViewBounds(true);  // 调整视图边界以保持图片比例
+
+        // 设置 ImageButton 的背景为透明（如果不需要显示背景）
+        ai_avatar_hint.setBackgroundColor(Color.TRANSPARENT);
+
+        Glide.with(this).load(R.drawable.ai).circleCrop().into(ai_avatar_hint);
+
+        // 创建一个 View 作为黑色小球
+        View blackBall = new View(this);
+        LinearLayout.LayoutParams ballParams = new LinearLayout.LayoutParams(40, 40); // 小球大小
+        ballParams.gravity = Gravity.CENTER; // 居中对齐
+        // 使用 margin 微调位置
+        ballParams.setMargins(5, -30, 0, 0); // 设置上边距 20 像素，用于微调位置
+        blackBall.setLayoutParams(ballParams);
+        blackBall.setBackgroundColor(Color.BLACK);
+
+        // 将 View 设置为圆形
+        blackBall.setClipToOutline(true);
+        blackBall.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                int size = Math.min(view.getWidth(), view.getHeight());
+                outline.setOval(0, 0, size, size);
+            }
+        });
+
+        aiHintLayer.addView(ai_avatar_hint);
+        aiHintLayer.addView(blackBall);
+        chatLayout.addView(aiHintLayer);
+
+        chatAnimationIn(aiHintLayer);
+
+        // 添加缩放动画
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(blackBall, "scaleX", 1f, 1.5f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(blackBall, "scaleY", 1f, 1.5f);
+        scaleXAnimator.setDuration(500);
+        scaleYAnimator.setDuration(500);
+        scaleXAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleYAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        scaleXAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        scaleYAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+
+        // 同时启动动画
+        scaleXAnimator.start();
+        scaleYAnimator.start();
+
+    }
+
+    /**
+     * 取消AI占位消息
+     * @param chatLayout
+     */
+    private void cancelHintLayer(LinearLayout chatLayout){
+        if (chatLayout.getChildCount() > 1){
+            chatLayout.removeViewAt(chatLayout.getChildCount() - 1);
+        }
+    }
+
+    public void chatAnimationIn(LinearLayout layout){
+        // 设置初始透明度和初始位置
+        layout.setAlpha(0f);
+        layout.setTranslationY(50f); // 设置初始位置为当前 Y 位置的下方
+
+        // 创建透明度动画（淡入）
+        ObjectAnimator fadeInAnimator = ObjectAnimator.ofFloat(layout, "alpha", 0f, 1f);
+
+        // 创建从下到上移动的动画
+        ObjectAnimator slideUpAnimator = ObjectAnimator.ofFloat(layout, "translationY", 50f, 0f);
+
+        // 创建动画组合：同时执行淡入和上移动画
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(fadeInAnimator, slideUpAnimator);
+        animatorSet.setDuration(500); // 动画持续时间
+        animatorSet.start();
     }
 
     //  当任意一方退出聊天页面页面，socket会断开连接。对方也会退出页面

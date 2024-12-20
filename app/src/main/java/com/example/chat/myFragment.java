@@ -295,6 +295,7 @@ myFragment extends Fragment {
     public void onResume() {
         super.onResume();
         isUserLoggedIn();
+        // TODO 先标记一下,这里有一个BUG. 当我登陆完成后,不切换页面的情况下,点击用户名,会切换到注册登陆页面.当我切换页面,再点击,则不会.后面好好研究下,解决这个BUG
         if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
             userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
         }else {
