@@ -3,6 +3,7 @@
     <style name="Base.Theme.Chat" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimaryDark">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@color/white</item>
 
         <!--        @android:color/transparent-->
         <!-- Customize your light theme here. -->

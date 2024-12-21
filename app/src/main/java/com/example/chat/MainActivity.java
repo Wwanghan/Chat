@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new chatFragment();
             } else if (item.getItemId() == R.id.nav_my) {
                 fragment = new myFragment();
+            } else if (item.getItemId() == R.id.nav_friend) {
+                fragment = new friendFragment();
             }
             return loadFragment(fragment);
         });

@@ -101,7 +101,6 @@ public class Chat extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
 
         // 修改导航栏颜色
@@ -645,6 +644,7 @@ public class Chat extends AppCompatActivity {
         chatLayout.addView(aiHintLayer);
 
         chatAnimationIn(aiHintLayer);
+        scrollToBottom();
 
         // 添加缩放动画
         ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(blackBall, "scaleX", 1f, 1.5f);

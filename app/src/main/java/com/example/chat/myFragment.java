@@ -39,14 +39,12 @@ import Constants.MessageConstants;
 import Utils.SPDataUtils;
 import Utils.ToastUtils;
 
-public class
-myFragment extends Fragment {
+public class myFragment extends Fragment {
     // 用于存放读取的文件信息
     String info_content;
     private View view;
     private Button wlanConnectBtn;
     private Button Settings;
-    private Button aboutMe;
     private ImageButton personalInformation;
     private TextView userName;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -66,7 +64,6 @@ myFragment extends Fragment {
 
         wlanConnectBtn = view.findViewById(R.id.wlanConnectBtn);
         Settings = view.findViewById(R.id.Settings);
-        aboutMe = view.findViewById(R.id.aboutMe);
         personalInformation = view.findViewById(R.id.personalInformation);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         userName = view.findViewById(R.id.userName);
@@ -159,17 +156,6 @@ myFragment extends Fragment {
         });
 
         /**
-         * 去到关于我页面
-         */
-        aboutMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent_aboutMe = new Intent(getActivity() , activity_aboutMe.class);
-                startActivity(intent_aboutMe);
-            }
-        });
-
-        /**
          * 去到个人信息页面
          */
         personalInformation.setOnClickListener(new View.OnClickListener() {
@@ -197,8 +183,11 @@ myFragment extends Fragment {
      * @return
      */
     private boolean isUserLoggedIn() {
+        Log.i("toad", "isUserLoggedIn: " + ((dataHub) getActivity().getApplication()).getIsLogin());
         if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
             userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
+            // 防止登陆成功切换会来时，还可以进入注册登陆页的BUG
+            userName.setOnClickListener(null);
         }else {
             userName.setText("请您注册/登录");
             userName.setOnClickListener(new View.OnClickListener() {
@@ -295,7 +284,6 @@ myFragment extends Fragment {
     public void onResume() {
         super.onResume();
         isUserLoggedIn();
-        // TODO 先标记一下,这里有一个BUG. 当我登陆完成后,不切换页面的情况下,点击用户名,会切换到注册登陆页面.当我切换页面,再点击,则不会.后面好好研究下,解决这个BUG
         if (((dataHub) getActivity().getApplication()).getIsLogin().equals("true")){
             userName.setText("Name : " + ((dataHub) getActivity().getApplication()).getName());
         }else {
