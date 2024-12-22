@@ -30,6 +30,7 @@ public class personal_information extends AppCompatActivity {
 
     private ImageButton exitPage;
     private TextView userName;
+    private TextView userGender;
     private ImageButton changeName;
     private ImageView userAvatar;
     private TextView myUid;
@@ -47,6 +48,7 @@ public class personal_information extends AppCompatActivity {
 
         exitPage = findViewById(R.id.exitPage);
         userName = findViewById(R.id.user_name);
+        userGender = findViewById(R.id.user_gender);
         userAvatar = findViewById(R.id.userAvatar);
         createTime = findViewById(R.id.create_time);
         phoneNumber = findViewById(R.id.user_phone_number);
@@ -59,6 +61,7 @@ public class personal_information extends AppCompatActivity {
 
         myUid.setText("UID: " + ((dataHub) getApplication()).getUID());
         userName.setText(((dataHub) getApplication()).getName());
+        userGender.setText(((dataHub) getApplication()).getGender());
         phoneNumber.setText(((dataHub) getApplication()).getPhoneNumber());
         createTime.setText(((dataHub) getApplication()).getCreate_time());
 
@@ -166,11 +169,13 @@ public class personal_information extends AppCompatActivity {
                 SPDataUtils.storageInformation(getBaseContext() , "userName" , "userNull");
                 SPDataUtils.storageInformation(getBaseContext() , "phoneNumber" , "null");
                 SPDataUtils.storageInformation(getBaseContext() , "create_time" , "null");
+                SPDataUtils.storageInformation(getBaseContext() , "Gender" , "null");
                 ((dataHub) getApplication()).setIsLogin("false");
                 ((dataHub) getApplication()).setUID("uidNull");
                 ((dataHub) getApplication()).setName("userNull");
                 ((dataHub) getApplication()).setPhoneNumber("null");
                 ((dataHub) getApplication()).setCreate_time("null");
+                ((dataHub) getApplication()).setGender("null");
                 ToastUtils.showToast(getBaseContext() , MessageConstants.LOGOUT_SUCCESS);
                 finish();
             }

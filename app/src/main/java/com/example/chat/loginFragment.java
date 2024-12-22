@@ -120,15 +120,18 @@ public class loginFragment extends Fragment {
                             ((dataHub) getActivity().getApplication()).setIsLogin("true");
                             SPDataUtils.storageInformation(getContext() , "isLogin" , "true");
 
+                            // TODO 这里先直接读取性别信息,但这样不好,我希望用户在个人信息页里面修改性别,而不是在登陆是读取.因为注册时并没有性别选项,那么这里登陆必然是获取不到性别信息
                             // 将数据上传到数据中心，用户注册完可以立马看到数据
                             ((dataHub) getActivity().getApplication()).setUID(result.get(0));
                             ((dataHub) getActivity().getApplication()).setName(result.get(1));
+                            ((dataHub) getActivity().getApplication()).setGender(result.get(4));
                             ((dataHub) getActivity().getApplication()).setPhoneNumber(result.get(2));
                             ((dataHub) getActivity().getApplication()).setCreate_time(result.get(6));
 
                             // 将用户信息保存在本地
                             SPDataUtils.storageInformation(getContext() , "UID" , result.get(0));
                             SPDataUtils.storageInformation(getContext() , "userName" , result.get(1));
+                            SPDataUtils.storageInformation(getContext() , "Gender" , result.get(4));
                             SPDataUtils.storageInformation(getContext() , "phoneNumber" , result.get(2));
                             SPDataUtils.storageInformation(getContext() , "create_time" , result.get(6));
 

@@ -16,7 +16,7 @@ android {
         minSdk = 33
         targetSdk = 33
         versionCode = 1
-        versionName = "1.3.0"
+        versionName = "1.3.3"
         // 获取数据库密钥
         buildConfigField("String", "SQL_API_KEY", "\"${project.findProperty("SQL_API_KEY") as String}\"")
         // 获取千帆大模型所需要的密钥

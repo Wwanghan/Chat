@@ -86,6 +86,34 @@
             />
     </LinearLayout>
 
+    <!-- 用户性别 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:text="性别"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            />
+
+        <TextView
+            android:id="@+id/user_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40dp"
+            />
+    </LinearLayout>
+
+
     <!-- 手机号 -->
     <LinearLayout
         android:layout_width="match_parent"

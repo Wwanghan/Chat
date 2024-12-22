@@ -1,25 +1,13 @@
 package com.example.chat;
 
+
 import android.app.Application;
+import android.content.Context;
 import android.net.Uri;
-import android.os.Looper;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Handler;
 
+import Constants.GlobalDataConstants;
 import Utils.SPDataUtils;
-import cn.bmob.v3.util.Utils;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 public class dataHub extends Application {
 
@@ -27,6 +15,7 @@ public class dataHub extends Application {
     private int Delay;  // AI流对话延迟
     private String UID; // 保存用户名
     private String userName;
+    private String Gender;
     private String targetName; // 保存对方的名字
     private String ipAddress;
     private String createTime;
@@ -36,29 +25,31 @@ public class dataHub extends Application {
     private Uri myAvatar = null;
 
     public void getConfig(){
-        // 程序最开始运行时，先将一些默认值存储
-        // 这里使用变量 isFirst 判断用户是否是第一次打开App, 如果是, 那么会加载默认值，反之则不会
-        String isFirst = null;
-        isFirst = SPDataUtils.getStorageInformation(getBaseContext() , "isFirst");
-        if (isFirst == null){
-            SPDataUtils.storageInformation(getBaseContext() , "isFirst" , "true");
-            SPDataUtils.storageInformation(getBaseContext() , "userName" , "userNull");
-            SPDataUtils.storageInformation(getBaseContext() , "UID" , "uidNull");
-            SPDataUtils.storageInformation(getBaseContext() , "isLogin" , "false");
-            SPDataUtils.storageInformation(getBaseContext() , "phoneNumber" , "null");
-            SPDataUtils.storageInformation(getBaseContext() , "create_time" , "null");
-            SPDataUtils.storageInformation(getBaseContext() , "streamDelay" , "50");
-        }
+        // 程序最开始运行时，先从本地读取一些后面要用到的数据信息
 
-        // 将默认值赋值，方便后面从这儿取数据
-        this.userName = SPDataUtils.getStorageInformation(getBaseContext() , "userName");
-        this.UID = SPDataUtils.getStorageInformation(getBaseContext() , "UID");
-        this.isLogin = SPDataUtils.getStorageInformation(getBaseContext() , "isLogin");
-        this.phoneNumber = SPDataUtils.getStorageInformation(getBaseContext() , "phoneNumber");
-        this.createTime = SPDataUtils.getStorageInformation(getBaseContext() , "create_time");
-        this.Delay = Integer.parseInt(SPDataUtils.getStorageInformation(getBaseContext() , "streamDelay"));
+        Context context = getBaseContext();
+        ensureDefaultValue(context , GlobalDataConstants.KEY_UID , GlobalDataConstants.DEFAULT_UID);
+        ensureDefaultValue(context , GlobalDataConstants.KEY_IS_LOGIN , GlobalDataConstants.DEFAULT_IS_LOGIN);
+        ensureDefaultValue(context , GlobalDataConstants.KEY_USERNAME , GlobalDataConstants.DEFAULT_USERNAME);
+        ensureDefaultValue(context , GlobalDataConstants.KEY_GENDER , GlobalDataConstants.DEFAULT_GENDER);
+        ensureDefaultValue(context , GlobalDataConstants.KEY_PHONE_NUMBER , GlobalDataConstants.DEFAULT_PHONE_NUMBER);
+        ensureDefaultValue(context , GlobalDataConstants.KEY_CREATE_TIME , GlobalDataConstants.DEFAULT_CREATE_TIME);
+        ensureDefaultValue(context , GlobalDataConstants.KEY_STREAM_DELAY , GlobalDataConstants.DEFAULT_STREAM_DELAY);
+
+        this.isLogin = SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_IS_LOGIN);
+        this.UID = SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_UID);
+        this.userName = SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_USERNAME);
+        this.Gender = SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_GENDER);
+        this.phoneNumber = SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_PHONE_NUMBER);
+        this.createTime = SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_CREATE_TIME);
+        this.Delay = Integer.parseInt(SPDataUtils.getStorageInformation(getBaseContext() , GlobalDataConstants.KEY_STREAM_DELAY));
     }
 
+    private void ensureDefaultValue(Context context, String key, String defaultValue) {
+        if (SPDataUtils.getStorageInformation(context, key) == null) {
+            SPDataUtils.storageInformation(context, key, defaultValue);
+        }
+    }
 
     public Socket getSocket() {
         return Socket;
@@ -95,4 +86,12 @@ public class dataHub extends Application {
 
     public void setIsLogin(String islogin){ this.isLogin = islogin; }
     public String getIsLogin(){ return this.isLogin; }
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
 }
