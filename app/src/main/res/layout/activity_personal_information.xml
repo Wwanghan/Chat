@@ -78,7 +78,6 @@
             android:id="@+id/change_name"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/right_arrow"
             android:background="@color/white"
             android:layout_marginRight="15dp"
 

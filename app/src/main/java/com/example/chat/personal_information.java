@@ -20,8 +20,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import Constants.MessageConstants;
+import Utils.GeneralUtils;
 import Utils.MyDatabaseUtils;
 import Utils.SPDataUtils;
 import Utils.ToastUtils;
@@ -81,25 +83,61 @@ public class personal_information extends AppCompatActivity {
             Glide.with(this).load(R.mipmap.mrtoad).circleCrop().into(userAvatar);
         }
 
-        // TODO 后面在修改用户名时，需要判断用户名是否合法，不合法则提示用户。现在累了，后面有空再改
         /**
-         * 用户自定义设置名字
+         * 如果用户未登陆，则无法修改名字
+         * 如果用户登陆，那么用户可以修改名字
+         * 修改名字与数据库同步
          */
-        changeName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 创建输入框
-                EditText input = new EditText(personal_information.this);
-                input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
-                // 调用封装好的 dialogUtils
-                dialogUtils.showDialog(personal_information.this, "input" , "请输入新名字", "确认" , input ,
-                    (dialog, which) -> {
-                        // 修改名字分为两种情况
-                        // 1. 用户未登陆，此时只是在本地保存新的名字
-                        // 2. 用户已经登陆，此时需要将最新的名字更新数据库保存
-                        if (((dataHub) getApplication()).getIsLogin().equals("true")){
-                            // 更新数据库，先在数据库中修改完成对应用户名，确保数据库已经修改完毕，等回调再在本地修改保存。
-                            // 防止先在本地修改后，数据库连接失败的情况
+        if (((dataHub) getApplication()).getIsLogin().equals("false")){
+            changeName.setOnClickListener(null);
+        } else {
+            changeName.setImageResource(R.mipmap.right_arrow);
+            changeName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 创建输入框
+                    EditText input = new EditText(personal_information.this);
+                    input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+                    CountDownLatch countDownLatch = new CountDownLatch(1);
+                    final Boolean[] isNameExists = {false};
+
+                    // 调用封装好的 dialogUtils
+                    dialogUtils.showDialog(personal_information.this, "input" , "请输入新名字", "确认" , input , (dialog, which) -> {
+
+                        if (GeneralUtils.containsSpecialCharacters(input.getText().toString())){
+                            ToastUtils.showToast(getBaseContext() , MessageConstants.USERNAME_CANNOT_CONTAIN_SPECIAL_CHARACTERS);
+                            return;
+                        }
+
+                        // 判断用户名是否存在
+                        MyDatabaseUtils.checkUserNameExists(input.getText().toString(), new MyDatabaseUtils.ResultCallback<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean result) {
+                                if (result){
+                                    runOnUiThread(() -> {ToastUtils.showToast(getBaseContext() , MessageConstants.USERNAME_ALREADY_EXISTS);});
+                                    isNameExists[0] = true;
+                                    countDownLatch.countDown();
+                                } else {
+                                    countDownLatch.countDown();
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Exception e) {
+                                runOnUiThread(() -> {ToastUtils.showToast(getBaseContext() , MessageConstants.DATABASE_CONNECTION_FAILED);});
+                                countDownLatch.countDown();
+                            }
+                        });
+
+                        try {
+                            countDownLatch.await();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        if (!isNameExists[0]){
+                            // 更新名字
                             MyDatabaseUtils.updateUserNameByUID((input.getText().toString()) , ((dataHub) getApplication()).getUID() , new MyDatabaseUtils.ResultCallback<ArrayList<String>>() {
                                 @Override
                                 public void onSuccess(ArrayList<String> result) {
@@ -118,19 +156,11 @@ public class personal_information extends AppCompatActivity {
                                     });
                                 }
                             });
-
-                        } else {
-                            // 用户未登陆的情况只修改本地，不涉及数据库操作
-                            ((dataHub) getApplication()).setName(input.getText().toString());
-                            SPDataUtils.storageInformation(getBaseContext() , "userName" , input.getText().toString());
-                            userName.setText(input.getText().toString());
-                            ToastUtils.showToast(getBaseContext() , MessageConstants.NAME_CHANGE_SUCCESS);
                         }
-
-                    }
-                );
-            }
-        });
+                    });
+                }
+            });
+        }
 
         /**
          * 用户自定义设置头像

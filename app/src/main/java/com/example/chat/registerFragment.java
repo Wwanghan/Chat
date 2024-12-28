@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import Animations.ViewTransitionAnimator;
 import Constants.MessageConstants;
 import Utils.BmobUtils;
+import Utils.GeneralUtils;
 import Utils.MyDatabaseUtils;
 import Utils.SHA256Utils;
 import Utils.ToastUtils;
@@ -47,8 +48,6 @@ public class registerFragment extends Fragment {
 
     // 发送验证码的倒计时
     private static final int COUNTDOWN_TIME = 60;
-    // 定义正则表达式
-    private static final String SPECIAL_CHARACTERS_REGEX = "[()\\[\\],.<>@#$%^&*~+=!?:;'\"{}|\\\\/]";
     private CountDownTimer countDownTimer;
 
     @Override
@@ -355,7 +354,7 @@ public class registerFragment extends Fragment {
     private int checkUserName(String userName){
         final int[] isSuccess = {0};
 
-        if (containsSpecialCharacters(userName)){
+        if (GeneralUtils.containsSpecialCharacters(userName)){
             userNameErrorText.setText(MessageConstants.USERNAME_CANNOT_CONTAIN_SPECIAL_CHARACTERS);
             ViewTransitionAnimator.showViewWithAnimation(userNameErrorText , -30f , 300);
             return -3;
@@ -397,16 +396,6 @@ public class registerFragment extends Fragment {
         } else {
             return -2;
         }
-    }
-
-    /**
-     * 正则匹配用户名是否包含特殊字符
-     * @param name
-     * @return
-     */
-    private boolean containsSpecialCharacters(String name) {
-        Pattern pattern = Pattern.compile(SPECIAL_CHARACTERS_REGEX);
-        return pattern.matcher(name).find();
     }
 
     @Override
