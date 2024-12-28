@@ -51,6 +51,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 import Constants.MessageConstants;
+import Utils.GeneralUtils;
 import Utils.SPDataUtils;
 import Utils.ToastUtils;
 
@@ -543,7 +544,22 @@ public class Chat extends AppCompatActivity {
             // 将整个 LinearLayout 右对齐
             linearLayout.setGravity(Gravity.RIGHT);
             message_btn.setBackgroundResource(R.drawable.button_shape_my);
-            message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+            // 动态设置文本的对齐方式
+            if (GeneralUtils.detectLanguage(message) == 1){
+                if (message.length() < 5){
+                    // 设置水平和垂直居中
+                    message_btn.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+                }else {
+                    message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                }
+            } else {
+                if (message_btn.length() < 6){
+                    message_btn.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+                } else {
+                    message_btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                }
+            }
+
             linearLayout.addView(message_btn);
             linearLayout.addView(avatar);
         } else {
